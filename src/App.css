@@ -615,8 +615,9 @@ code {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  max-width: 400px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .statistics-header {
@@ -644,6 +645,7 @@ code {
   flex-direction: column;
   gap: 16px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .stats-row {
@@ -997,6 +999,9 @@ code {
   .statistics-container,
   .profile-container {
     padding: 20px 16px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
   }
   
   .welcome-title,
