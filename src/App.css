@@ -777,8 +777,6 @@ code {
   overflow-y: visible;
   width: 100%;
   max-width: 400px;
-  display: flex;
-  justify-content: center;
 }
 
 .glass-guest-list {
@@ -788,7 +786,6 @@ code {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .guest-item-glass {
