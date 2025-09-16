@@ -26,30 +26,42 @@ function App() {
   };
 
   const renderScreen = () => {
-    return (
-      <>
-        <div className={`screen ${currentScreen === 'login' ? 'active' : ''}`}>
-          <div className="screen-content">
-            <LoginScreen onLogin={handleLogin} />
+    switch (currentScreen) {
+      case 'login':
+        return (
+          <div className="screen active">
+            <div className="screen-content">
+              <LoginScreen onLogin={handleLogin} />
+            </div>
           </div>
-        </div>
-        <div className={`screen ${currentScreen === 'guestlist' ? 'active' : ''}`}>
-          <div className="screen-content">
-            <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+        );
+      case 'guestlist':
+        return (
+          <div className="screen active">
+            <div className="screen-content">
+              <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+            </div>
           </div>
-        </div>
-        <div className={`screen ${currentScreen === 'statistics' ? 'active' : ''}`}>
-          <div className="screen-content">
-            <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+        );
+      case 'statistics':
+        return (
+          <div className="screen active">
+            <div className="screen-content">
+              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+            </div>
           </div>
-        </div>
-        <div className={`screen ${currentScreen === 'profile' ? 'active' : ''}`}>
-          <div className="screen-content">
-            <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+        );
+      case 'profile':
+        return (
+          <div className="screen active">
+            <div className="screen-content">
+              <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+            </div>
           </div>
-        </div>
-      </>
-    );
+        );
+      default:
+        return null;
+    }
   };
 
   return (
