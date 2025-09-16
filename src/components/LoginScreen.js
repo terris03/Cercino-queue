@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 
 const LoginScreen = ({ onLogin, onBack }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: ''
+  });
 
-  const handleLogin = async (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false);
+    // Simple validation - in real app, this would connect to authentication
+    if (credentials.email && credentials.password) {
       onLogin();
-    }, 1500);
+    }
   };
 
   return (
@@ -21,78 +27,61 @@ const LoginScreen = ({ onLogin, onBack }) => {
       <div className="login-container">
         {/* Header */}
         <div className="login-header">
-          <button className="back-button" onClick={onBack}>
+          <button className="back-btn" onClick={onBack}>
             <i className="fas fa-arrow-left"></i>
           </button>
           <h1 className="login-title">Welcome Back</h1>
-          <p className="login-subtitle">Sign in to continue to your dashboard</p>
+          <p className="login-subtitle">Sign in to your admin panel</p>
         </div>
 
         {/* Login Form */}
-        <form className="login-form" onSubmit={handleLogin}>
-          <div className="input-group">
-            <label className="input-label">Email Address</label>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
             <input
               type="email"
-              className="login-input"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="email"
+              name="email"
+              value={credentials.email}
+              onChange={handleInputChange}
+              placeholder="admin@cercino.eu"
               required
             />
           </div>
 
-          <div className="input-group">
-            <label className="input-label">Password</label>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
               type="password"
-              className="login-input"
+              id="password"
+              name="password"
+              value={credentials.password}
+              onChange={handleInputChange}
               placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          <button 
-            type="submit" 
-            className={`login-button ${isLoading ? 'loading' : ''}`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <i className="fas fa-spinner fa-spin"></i>
-                <span>Signing In...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <i className="fas fa-arrow-right"></i>
-              </>
-            )}
+          <button type="submit" className="login-btn">
+            <i className="fas fa-sign-in-alt"></i>
+            Sign In
           </button>
         </form>
 
-        {/* Additional Options */}
-        <div className="login-options">
-          <button className="forgot-password">Forgot Password?</button>
-          <div className="signup-link">
-            Don't have an account? <button className="signup-button">Sign Up</button>
+        {/* Bottom Navigation */}
+        <div className="bottom-navigation">
+          <div className="nav-item">
+            <i className="fas fa-users"></i>
+            <span>Guests</span>
           </div>
-        </div>
-
-        {/* Demo Login */}
-        <div className="demo-login">
-          <button 
-            className="demo-button"
-            onClick={() => {
-              setEmail('demo@cercino.com');
-              setPassword('demo123');
-            }}
-          >
-            <i className="fas fa-magic"></i>
-            Use Demo Account
-          </button>
+          <div className="nav-item">
+            <i className="fas fa-chart-bar"></i>
+            <span>Stats</span>
+          </div>
+          <div className="nav-item">
+            <i className="fas fa-user"></i>
+            <span>Profile</span>
+          </div>
         </div>
       </div>
     </div>
