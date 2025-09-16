@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const Dashboard = ({ onLogout }) => {
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -13,6 +14,10 @@ const Dashboard = ({ onLogout }) => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
   };
 
   return (
@@ -56,6 +61,20 @@ const Dashboard = ({ onLogout }) => {
                       <label htmlFor="image-upload" className="change-image-button">
                         Change Image
                       </label>
+                      <div className="date-overlay">
+                        <input
+                          type="date"
+                          value={selectedDate}
+                          onChange={handleDateChange}
+                          className="date-input"
+                          placeholder="Add date"
+                        />
+                        {selectedDate ? (
+                          <div className="date-display">{selectedDate}</div>
+                        ) : (
+                          <div className="date-placeholder">Add date</div>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <label htmlFor="image-upload" className="upload-button">
