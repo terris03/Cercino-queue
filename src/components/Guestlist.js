@@ -15,7 +15,7 @@ const Guestlist = () => {
     {
       icon: '👋',
       title: 'Welcome to Cercino!',
-      description: 'Your professional guestlist management system for events. Let\'s get you started!',
+      description: 'Your professional guestlist management system for events. Let\'s get you started! ✨ NEW APPLE DESIGN ✨',
       color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
     },
     {
