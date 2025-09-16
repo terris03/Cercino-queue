@@ -10,14 +10,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(255, 105, 180, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(255, 182, 193, 0.08) 0%, transparent 50%),
-    linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+    radial-gradient(circle at 20% 80%, rgba(255, 105, 180, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 182, 193, 0.04) 0%, transparent 50%),
+    linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #1a1a1a 75%, #2a2a2a 100%);
   min-height: 100vh;
-  color: white;
+  color: #ffffff;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.022em;
+  line-height: 1.47059;
 }
 
 code {
@@ -38,17 +39,17 @@ code {
   padding-bottom: 80px; /* Space for bottom navigation */
 }
 
-/* Header Styles */
+/* Apple-Style Header */
 .header {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
 .header-content {
@@ -78,20 +79,28 @@ code {
   max-width: 500px;
 }
 
+/* Apple-Style Search Input */
 .search-input {
   width: 100%;
-  padding: 14px 50px 14px 18px;
+  padding: 12px 16px 12px 44px;
   border: none;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  color: white;
-  font-size: 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  color: #ffffff;
+  font-size: 17px;
   font-weight: 400;
   outline: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.022em;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
 }
 
 .search-input::placeholder {
@@ -227,37 +236,45 @@ code {
   display: contents;
 }
 
+/* Apple-Style Buttons */
 .btn {
-  padding: 18px 25px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
   position: relative;
   overflow: hidden;
+  letter-spacing: -0.022em;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
-  color: white;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
 
 .btn-secondary {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
@@ -279,17 +296,18 @@ code {
   display: contents;
 }
 
+/* Apple-Style Stats Items */
 .stats-item {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 16px;
-  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 12px;
+  padding: 16px 20px;
   text-align: center;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .stats-item:hover {
@@ -298,87 +316,94 @@ code {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
 }
 
+/* Apple-Style Stats Typography */
 .stats-label {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  opacity: 0.7;
-  margin-bottom: 8px;
-  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+  letter-spacing: -0.022em;
+  text-transform: uppercase;
 }
 
 .stats-count {
-  font-size: 32px;
-  font-weight: 600;
-  color: white;
-  letter-spacing: -0.02em;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
 }
 
-/* Guest List */
+/* Apple-Style Guest List */
 .guest-list {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+/* Apple-Style Guest Items */
 .guest-item {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  gap: 15px;
+  gap: 16px;
   align-items: center;
-  padding: 18px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.2s ease;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .guest-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  transform: translateX(2px);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .guest-item:last-child {
   border-bottom: none;
 }
 
+/* Apple-Style Guest Typography */
 .guest-name {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 500;
-  color: white;
-  letter-spacing: -0.01em;
+  color: #ffffff;
+  letter-spacing: -0.022em;
+  line-height: 1.3;
 }
 
 .guest-price {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: -0.022em;
   text-align: right;
-  letter-spacing: 0.01em;
 }
 
+/* Apple-Style Check-in Button */
 .checkin-btn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  color: white;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  border: 0.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   min-width: 100px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.022em;
 }
 
 .checkin-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.12) 100%);
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .checkin-btn:active:not(:disabled) {
@@ -456,13 +481,13 @@ code {
 .tutorial-card-content {
   width: 100%;
   height: 100%;
-  padding: 40px 30px;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 16px;
   position: relative;
   overflow: hidden;
 }
@@ -474,35 +499,37 @@ code {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .tutorial-icon {
   font-size: 3rem;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
   z-index: 2;
   position: relative;
 }
 
 .tutorial-title {
-  font-size: 1.5rem;
+  font-size: 22px;
   font-weight: 600;
-  color: white;
+  color: #ffffff;
   margin-bottom: 12px;
   z-index: 2;
   position: relative;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
+  line-height: 1.3;
 }
 
 .tutorial-description {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.47059;
   z-index: 2;
   position: relative;
   max-width: 280px;
+  letter-spacing: -0.022em;
 }
 
 .tutorial-navigation {
@@ -621,21 +648,21 @@ code {
   }
 }
 
-/* Bottom Navigation */
+/* Apple-Style Bottom Navigation */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-around;
-  padding: 18px 0;
+  padding: 16px 0;
   z-index: 1000;
-  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
 .nav-item {
