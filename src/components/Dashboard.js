@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Dashboard = ({ onLogout }) => {
+  const [uploadedImage, setUploadedImage] = useState(null);
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        // You can handle the uploaded image here
+        setUploadedImage(event.target.result);
         console.log('Image uploaded:', event.target.result);
-        // For now, just log it - you can add state management later
       };
       reader.readAsDataURL(file);
     }
@@ -45,9 +46,22 @@ const Dashboard = ({ onLogout }) => {
                     style={{ display: 'none' }}
                     id="image-upload"
                   />
-                  <label htmlFor="image-upload" className="upload-button">
-                    <div className="upload-plus">+</div>
-                  </label>
+                  {uploadedImage ? (
+                    <div className="uploaded-image-container">
+                      <img 
+                        src={uploadedImage} 
+                        alt="Uploaded artwork" 
+                        className="uploaded-image"
+                      />
+                      <label htmlFor="image-upload" className="change-image-button">
+                        Change Image
+                      </label>
+                    </div>
+                  ) : (
+                    <label htmlFor="image-upload" className="upload-button">
+                      <div className="upload-plus">+</div>
+                    </label>
+                  )}
                 </div>
               </div>
             </div>
