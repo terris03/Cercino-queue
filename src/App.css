@@ -570,66 +570,202 @@ code {
   transform: scale(1.05);
 }
 
-.event-image-spotify {
-  width: 200px;
-  height: 200px;
-  background: #000000;
+/* Glassmorphism Event Card */
+.glassmorphism-event-card {
+  position: relative;
+  width: 280px;
+  height: 350px;
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 25%, #4ECDC4 50%, #45B7D1 75%, #96CEB4 100%);
   border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.featured-tag-glass {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #FFD700;
+  color: #000000;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-artwork-glass {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.sun-moon-artwork {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 60px;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.event-details-glass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  z-index: 2;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+}
+
+.event-date-glass {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.event-title-row-glass {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.play-btn-glass {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #ffffff;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  margin-bottom: 20px;
-  border: 3px solid #000000;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.event-content-spotify {
-  text-align: center;
-  margin-bottom: 30px;
+.play-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.event-title-spotify {
-  font-size: 24px;
+.event-title-glass {
+  font-size: 20px;
   font-weight: 700;
-  color: #000000;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.022em;
-}
-
-.event-subtitle-spotify {
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
   margin: 0;
+  flex: 1;
+  letter-spacing: -0.022em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Guest List */
-.guest-list {
-  width: 100%;
-  max-width: 250px;
-}
-
-.guest-item {
+.heart-btn-glass {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #ffffff;
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.guest-item:last-child {
+.heart-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.event-info-glass {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-subtitle-glass {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.event-location-glass {
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Black Guest List */
+.guest-list-black {
+  width: 100%;
+  max-width: 280px;
+  background: #000000;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.guest-item-black {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guest-item-black:last-child {
   border-bottom: none;
 }
 
-.guest-name {
+.guest-name-black {
   font-size: 16px;
   font-weight: 500;
+  color: #ffffff;
+  flex: 1;
+}
+
+.guest-plus {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-right: 8px;
+}
+
+.guest-status {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.guest-status.vip {
+  background: #FFD700;
   color: #000000;
 }
 
-.guest-price {
-  font-size: 16px;
-  font-weight: 600;
+.guest-status.staff {
+  background: #4ECDC4;
   color: #000000;
+}
+
+.guest-status.press {
+  background: #8B5CF6;
+  color: #ffffff;
 }
 
 /* Add Event Card */

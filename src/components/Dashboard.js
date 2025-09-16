@@ -30,46 +30,88 @@ const Dashboard = ({ onLogout }) => {
             <div className="spotify-container">
               {/* Tutorial Event Card */}
               <div className="spotify-event-card active">
-                <div className="event-image-spotify">
-                  <div className="retro-artwork">
-                    <div className="afro-woman">👩🏿‍🦱</div>
-                    <div className="abstract-shapes">
-                      <div className="shape shape-1"></div>
-                      <div className="shape shape-2"></div>
-                      <div className="shape shape-3"></div>
+                <div className="glassmorphism-event-card">
+                  <div className="featured-tag-glass">FEATURED</div>
+                  <div className="event-artwork-glass">
+                    <div className="sun-moon-artwork">
+                      <div className="sun-face">☀️</div>
+                      <div className="moon-face">🌙</div>
+                    </div>
+                  </div>
+                  <div className="event-details-glass">
+                    <div className="event-date-glass">SAMEDI 08 JUIN - 19H-02H</div>
+                    <div className="event-title-row-glass">
+                      <button className="play-btn-glass">
+                        <i className="fas fa-play"></i>
+                      </button>
+                      <h2 className="event-title-glass">NOCHE DE VERANO</h2>
+                      <button className="heart-btn-glass">
+                        <i className="fas fa-heart"></i>
+                      </button>
+                    </div>
+                    <div className="event-info-glass">
+                      <div className="event-subtitle-glass">POOL PARTY GIRLS ONLY - La Bringue</div>
+                      <div className="event-location-glass">The Palm Paris</div>
                     </div>
                   </div>
                 </div>
-                <div className="event-content-spotify">
-                  <h3 className="event-title-spotify">Tutorial</h3>
-                  <p className="event-subtitle-spotify">Learn how to use the app</p>
-                </div>
                 
                 {/* Guest List */}
-                <div className="guest-list">
-                  <div className="guest-item">
-                    <span className="guest-name">Emma Andersson</span>
-                    <span className="guest-price">250 kr</span>
+                <div className="guest-list-black">
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Aaron Garrido</span>
+                    <span className="guest-status vip">VIP</span>
                   </div>
-                  <div className="guest-item">
-                    <span className="guest-name">Marcus Johansson</span>
-                    <span className="guest-price">300 kr</span>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Ajay James</span>
+                    <span className="guest-plus">+5</span>
+                    <span className="guest-status staff">Staff</span>
                   </div>
-                  <div className="guest-item">
-                    <span className="guest-name">Sofia Eriksson</span>
-                    <span className="guest-price">200 kr</span>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Alan Tudyk</span>
+                    <span className="guest-plus">+5</span>
+                    <span className="guest-status staff">Staff</span>
                   </div>
-                  <div className="guest-item">
-                    <span className="guest-name">Alexander Nilsson</span>
-                    <span className="guest-price">350 kr</span>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Bill O'Reilly</span>
+                    <span className="guest-status staff">Staff</span>
                   </div>
-                  <div className="guest-item">
-                    <span className="guest-name">Isabella Larsson</span>
-                    <span className="guest-price">275 kr</span>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Brett Lynch</span>
+                    <span className="guest-status vip">VIP</span>
                   </div>
-                  <div className="guest-item">
-                    <span className="guest-name">Erik Gustafsson</span>
-                    <span className="guest-price">225 kr</span>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Brett Stimely</span>
+                    <span className="guest-plus">+2</span>
+                    <span className="guest-status press">Press</span>
+                  </div>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Brian Call</span>
+                    <span className="guest-plus">+4 (free)</span>
+                    <span className="guest-status staff">Staff</span>
+                  </div>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Buzz Aldrin</span>
+                    <span className="guest-plus">+20 (free)</span>
+                    <span className="guest-status vip">VIP</span>
+                  </div>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Chris a. Robinson</span>
+                    <span className="guest-plus">+2</span>
+                    <span className="guest-status vip">VIP</span>
+                  </div>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Drew Pillsbury</span>
+                    <span className="guest-status press">Press</span>
+                  </div>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Dustin Dennard</span>
+                    <span className="guest-status press">Press</span>
+                  </div>
+                  <div className="guest-item-black">
+                    <span className="guest-name-black">Frances McDormand</span>
+                    <span className="guest-plus">+10 (free)</span>
+                    <span className="guest-status press">Press</span>
                   </div>
                 </div>
               </div>
