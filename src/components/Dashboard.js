@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 const Dashboard = ({ onLogout }) => {
-  const [uploadedImage, setUploadedImage] = useState('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&h=200&fit=crop');
-  const [selectedDate, setSelectedDate] = useState('2025-09-18');
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
