@@ -161,6 +161,17 @@ const Dashboard = ({ onLogout }) => {
   return (
     <div className="cercino-app-screen">
       <div className="cercino-container">
+        {/* Dashboard Header */}
+        <div className="dashboard-header">
+          <div className="dashboard-title">
+            <h1>Welcome to Cercino</h1>
+            <p>Your event management dashboard</p>
+          </div>
+          <button className="logout-btn" onClick={onLogout}>
+            <i className="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </div>
         {/* Create Event Form Modal */}
         {showCreateForm && (
           <div className="form-modal-overlay">
@@ -337,10 +348,57 @@ const Dashboard = ({ onLogout }) => {
           </div>
         )}
 
+        {/* Dashboard Options */}
+        <div className="dashboard-options">
+          <div className="dashboard-cards">
+            <div className="dashboard-card" onClick={handleCreateEvent}>
+              <div className="card-icon">
+                <i className="fas fa-plus"></i>
+              </div>
+              <h3>Create New Event</h3>
+              <p>Start a new event with guest management</p>
+            </div>
+            
+            <div className="dashboard-card" onClick={() => setEvents([])}>
+              <div className="card-icon">
+                <i className="fas fa-calendar-alt"></i>
+              </div>
+              <h3>View Events</h3>
+              <p>Manage your existing events</p>
+            </div>
+            
+            <div className="dashboard-card" onClick={() => window.open('https://cercino.eu', '_blank')}>
+              <div className="card-icon">
+                <i className="fas fa-external-link-alt"></i>
+              </div>
+              <h3>Visit Website</h3>
+              <p>Go to your main website</p>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
         <main className={`cercino-main ${events.length > 0 ? 'has-navigation' : ''}`}>
-          {/* Tutorial State - Show when no events */}
-          {events.length === 0 ? (
+          {/* Show dashboard options when no events and not creating */}
+          {events.length === 0 && !showCreateForm ? (
+            <div className="dashboard-welcome">
+              <div className="welcome-content">
+                <h2>Ready to manage your events?</h2>
+                <p>Choose an option below to get started</p>
+                <div className="welcome-actions">
+                  <button className="welcome-btn primary" onClick={handleCreateEvent}>
+                    <i className="fas fa-plus"></i>
+                    Create Your First Event
+                  </button>
+                  <button className="welcome-btn secondary" onClick={() => window.open('https://cercino.eu', '_blank')}>
+                    <i className="fas fa-external-link-alt"></i>
+                    Visit Main Website
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : events.length === 0 && showCreateForm ? (
+            /* Tutorial State - Show when creating first event */
             <div className="tutorial-state">
               <div className="tutorial-content">
                 <div className="tutorial-icon">
