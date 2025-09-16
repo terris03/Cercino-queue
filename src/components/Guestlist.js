@@ -171,17 +171,15 @@ const Guestlist = () => {
           </button>
         </div>
 
-        {/* Check-in Statistics Module */}
-        <div className="stats-module">
-          <div className="stats-content">
-            <button className="stats-btn checked-in">
-              <span className="stats-label">Checked in:</span>
-              <span className="stats-count">{checkedInCount}</span>
-            </button>
-            <button className="stats-btn non-checked">
-              <span className="stats-label">Non-checked:</span>
-              <span className="stats-count">{nonCheckedCount}</span>
-            </button>
+        {/* Check-in Statistics Cards */}
+        <div className="stats-cards">
+          <div className="stats-card">
+            <div className="stats-label">Checked in:</div>
+            <div className="stats-count">{checkedInCount}</div>
+          </div>
+          <div className="stats-card">
+            <div className="stats-label">Non-checked:</div>
+            <div className="stats-count">{nonCheckedCount}</div>
           </div>
         </div>
 

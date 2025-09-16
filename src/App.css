@@ -210,49 +210,39 @@ code {
   transform: translateY(-2px);
 }
 
-/* Stats Module */
-.stats-module {
+/* Stats Cards */
+.stats-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.stats-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 20px;
-  margin-bottom: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.stats-content {
-  display: flex;
-  gap: 20px;
-}
-
-.stats-btn {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 10px;
-  padding: 15px;
   color: white;
-  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
 }
 
-.stats-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+.stats-card:hover {
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
 }
 
 .stats-label {
   font-size: 14px;
   opacity: 0.8;
+  margin-bottom: 5px;
 }
 
 .stats-count {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
+  color: white;
 }
 
 /* Guest List */
@@ -534,8 +524,7 @@ code {
     gap: 10px;
   }
   
-  .stats-content {
-    flex-direction: column;
+  .stats-cards {
     gap: 10px;
   }
   
