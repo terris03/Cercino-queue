@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const LoginScreen = ({ onLogin }) => {
-  const [roomNumber, setRoomNumber] = useState('');
+  const [roomNumber, setRoomNumber] = useState('123');
 
   const handleInputChange = (e) => {
     setRoomNumber(e.target.value);
