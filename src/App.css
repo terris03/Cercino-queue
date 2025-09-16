@@ -511,12 +511,12 @@ code {
   }
   
   .action-buttons {
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    gap: 15px;
   }
   
   .btn {
-    width: 100%;
+    width: 40%;
   }
   
   .stats-section {
@@ -538,6 +538,7 @@ code {
   .btn {
     padding: 12px 15px;
     font-size: 14px;
+    width: 45%;
   }
   
   .stats-item {

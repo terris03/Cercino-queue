@@ -1,21 +1,9 @@
-First Name,Second Name,Price
-John,Smith,25
-Emma,Johnson,30
-Michael,Brown,25
-Sarah,Davis,35
-David,Wilson,25
-Lisa,Anderson,30
-Robert,Taylor,25
-Jennifer,Thomas,35
-William,Jackson,25
-Maria,Garcia,30
-James,Miller,25
-Linda,Martinez,35
-Christopher,Lee,25
-Patricia,Rodriguez,30
-Daniel,White,25
-Elizabeth,Harris,35
-Matthew,Clark,25
-Barbara,Lewis,30
-Anthony,Robinson,25
-Susan,Walker,35
+First Name,Second Name,Price,Status
+Rasmus,Andersen,50,Staff
+Ludwig,Nilsson,75,VIP
+Omar,Hassan,25,Guest
+Hassan,Ali,30,Press
+Adrian,Peterson,40,Guest
+Walter,Johnson,60,VIP
+Emil,Johansson,35,Guest
+Sigge,Eriksson,45,Staff
