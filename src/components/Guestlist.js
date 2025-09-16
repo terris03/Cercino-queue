@@ -58,6 +58,7 @@ const Guestlist = () => {
               firstName: values[0] || '',
               secondName: values[1] || '',
               price: values[2] || '0',
+              status: values[3] || 'Guest', // Add status field
               checkedIn: false,
               timestamp: new Date()
             };
@@ -83,9 +84,9 @@ const Guestlist = () => {
 
   const handleExportCSV = () => {
     const csvContent = [
-      'First Name,Second Name,Price,Checked In',
+      'First Name,Second Name,Price,Status,Checked In',
       ...guests.map(guest => 
-        `${guest.firstName},${guest.secondName},${guest.price},${guest.checkedIn ? 'Yes' : 'No'}`
+        `${guest.firstName},${guest.secondName},${guest.price},${guest.status || 'Guest'},${guest.checkedIn ? 'Yes' : 'No'}`
       )
     ].join('\n');
 
@@ -113,8 +114,14 @@ const Guestlist = () => {
     }
   };
 
-  const checkedInCount = guests.filter(guest => guest.checkedIn).length;
-  const nonCheckedCount = guests.filter(guest => !guest.checkedIn).length;
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'staff': return '#dc2626'; // Red
+      case 'press': return '#7c3aed'; // Purple
+      case 'vip': return '#eab308'; // Yellow
+      default: return '#6b7280'; // Gray
+    }
+  };
 
   return (
     <div className="guestlist-page">
@@ -171,46 +178,37 @@ const Guestlist = () => {
           </button>
         </div>
 
-        {/* Check-in Statistics Cards */}
-        <div className="stats-cards">
-          <div className="stats-card">
-            <div className="stats-label">Checked in:</div>
-            <div className="stats-count">{checkedInCount}</div>
+        {/* Check-in Statistics */}
+        <div className="stats-section">
+          <div className="stats-item">
+            <span className="stats-label">Checked in:</span>
+            <span className="stats-count">{guests.filter(guest => guest.checkedIn).length}</span>
           </div>
-          <div className="stats-card">
-            <div className="stats-label">Non-checked:</div>
-            <div className="stats-count">{nonCheckedCount}</div>
+          <div className="stats-item">
+            <span className="stats-label">Non-checked:</span>
+            <span className="stats-count">{guests.filter(guest => !guest.checkedIn).length}</span>
           </div>
         </div>
 
         {/* Guest List */}
-        <div className="guest-list-container">
-          <div className="guest-list-header">
-            <div className="column">First Name</div>
-            <div className="column">Price</div>
-            <div className="column">Action</div>
-          </div>
-          <div className="guest-list">
-            {filteredGuests.length === 0 ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>
-                {guests.length === 0 ? 'No guests imported yet. Click "Import CSV" to get started!' : 'No guests match your search criteria.'}
-              </div>
-            ) : (
-              filteredGuests.map(guest => (
-                <div key={guest.id} className="guest-item">
-                  <div className="guest-first-name">{guest.firstName}</div>
-                  <div className="guest-price">€{guest.price}</div>
-                  <button 
-                    className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
-                    onClick={() => !guest.checkedIn && handleCheckIn(guest.id)}
-                    disabled={guest.checkedIn}
-                  >
-                    {guest.checkedIn ? 'Checked In' : 'Check In'}
-                  </button>
+        <div className="guest-list">
+          {filteredGuests.length === 0 ? (
+            <div className="empty-state">
+              {guests.length === 0 ? 'No guests imported yet. Click "Import CSV" to get started!' : 'No guests match your search criteria.'}
+            </div>
+          ) : (
+            filteredGuests.map(guest => (
+              <div key={guest.id} className="guest-item">
+                <div className="guest-name">{guest.firstName} {guest.secondName}</div>
+                <div 
+                  className="guest-status"
+                  style={{ color: getStatusColor(guest.status) }}
+                >
+                  {guest.status || 'Guest'}
                 </div>
-              ))
-            )}
-          </div>
+              </div>
+            ))
+          )}
         </div>
       </main>
 
