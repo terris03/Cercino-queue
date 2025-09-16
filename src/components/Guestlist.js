@@ -200,12 +200,13 @@ const Guestlist = () => {
             filteredGuests.map(guest => (
               <div key={guest.id} className="guest-item">
                 <div className="guest-name">{guest.firstName} {guest.secondName}</div>
-                <div 
-                  className="guest-status"
-                  style={{ color: getStatusColor(guest.status) }}
+                <button
+                  className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
+                  onClick={() => !guest.checkedIn && handleCheckIn(guest.id)}
+                  disabled={guest.checkedIn}
                 >
-                  {guest.status || 'Guest'}
-                </div>
+                  {guest.checkedIn ? 'Checked In' : 'Check-in'}
+                </button>
               </div>
             ))
           )}
