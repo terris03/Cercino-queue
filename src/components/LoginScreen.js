@@ -17,15 +17,8 @@ const LoginScreen = ({ onLogin }) => {
 
   return (
     <div className="hotel-login-screen">
-      {/* Top Section - Professional Image */}
+      {/* Top Section - Background Image */}
       <div className="hotel-image-section">
-        <div className="hotel-staff-image">
-          <div className="staff-portrait">
-            <div className="staff-avatar">
-              <i className="fas fa-user-tie"></i>
-            </div>
-          </div>
-        </div>
         <div className="image-gradient-overlay"></div>
       </div>
 
