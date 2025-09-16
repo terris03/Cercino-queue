@@ -713,21 +713,42 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
-  padding: 30px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
   color: #ffffff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.event-info-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.event-info-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.event-info-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.event-info-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .upload-card.expanded .event-info-content {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+  z-index: 10;
 }
 
 .event-info-header {
@@ -767,10 +788,10 @@ body {
 }
 
 .event-info-details {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
 .event-info-item {
@@ -798,9 +819,10 @@ body {
 .event-info-stats {
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .event-stat {
@@ -822,7 +844,7 @@ body {
 
 .event-sales-info {
   margin-top: 20px;
-  padding-top: 20px;
+  padding: 20px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -871,6 +893,11 @@ body {
   padding: 0;
   border-radius: 16px;
   overflow: hidden;
+  z-index: 1;
+}
+
+.upload-card.expanded .uploaded-image-container {
+  z-index: 1;
 }
 
 .uploaded-image {

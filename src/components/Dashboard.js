@@ -31,7 +31,9 @@ const Dashboard = ({ onLogout }) => {
   };
 
   const handleCardClick = () => {
+    console.log('Card clicked! Current expanded state:', isCardExpanded);
     setIsCardExpanded(!isCardExpanded);
+    console.log('New expanded state:', !isCardExpanded);
   };
 
   const handleCloseEventInfo = (e) => {
@@ -88,6 +90,7 @@ const Dashboard = ({ onLogout }) => {
                         ×
                       </button>
                     </div>
+                    
                     
                     <div className="event-info-details">
                       <div className="event-info-item">
