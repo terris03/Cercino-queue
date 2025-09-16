@@ -16,7 +16,10 @@ const Guestlist = () => {
         id: doc.id,
         ...doc.data()
       }));
+      console.log('Real-time update: Loaded', guestsData.length, 'guests');
       setGuests(guestsData);
+    }, (error) => {
+      console.error('Real-time listener error:', error);
     });
 
     return () => unsubscribe();
@@ -52,10 +55,13 @@ const Guestlist = () => {
     const file = event.target.files[0];
     if (!file) return;
 
+    console.log('Starting CSV import for file:', file.name);
+
     const reader = new FileReader();
     reader.onload = async (e) => {
       const text = e.target.result;
       const lines = text.split('\n');
+      console.log('CSV file has', lines.length, 'lines');
       
       const newGuests = [];
       for (let i = 1; i < lines.length; i++) {
@@ -66,7 +72,7 @@ const Guestlist = () => {
               firstName: values[0] || '',
               secondName: values[1] || '',
               price: values[2] || '0',
-              status: values[3] || 'Guest', // Add status field
+              status: values[3] || 'Guest',
               checkedIn: false,
               timestamp: new Date()
             };
@@ -75,16 +81,25 @@ const Guestlist = () => {
         }
       }
 
+      console.log('Parsed', newGuests.length, 'guests from CSV');
+
       // Add guests to Firebase
       try {
         for (const guest of newGuests) {
           await addDoc(collection(db, 'guests'), guest);
         }
-        await loadGuests(); // Reload the guest list
+        console.log('Successfully added', newGuests.length, 'guests to Firebase');
+        // Real-time listener will automatically update the list
         alert(`Successfully imported ${newGuests.length} guests!`);
+        
+        // Reset file input to allow re-uploading the same file
+        event.target.value = '';
       } catch (error) {
         console.error('Error importing guests:', error);
         alert('Error importing guests. Please try again.');
+        
+        // Reset file input on error too
+        event.target.value = '';
       }
     };
     reader.readAsText(file);
