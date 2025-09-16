@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const Guestlist = () => {
@@ -9,9 +9,17 @@ const Guestlist = () => {
   const [filteredGuests, setFilteredGuests] = useState([]);
   const fileInputRef = useRef(null);
 
-  // Load guests from Firebase on component mount
+  // Set up real-time listener for guests
   useEffect(() => {
-    loadGuests();
+    const unsubscribe = onSnapshot(collection(db, 'guests'), (querySnapshot) => {
+      const guestsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setGuests(guestsData);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Filter guests based on search term
@@ -101,27 +109,30 @@ const Guestlist = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  const handleCheckIn = useCallback(async (guestId) => {
+  const handleCheckIn = useCallback(async (guestId, currentStatus) => {
     try {
       const guestRef = doc(db, 'guests', guestId);
+      const newStatus = !currentStatus;
       await updateDoc(guestRef, {
-        checkedIn: true,
-        checkInTime: new Date()
+        checkedIn: newStatus,
+        checkInTime: newStatus ? new Date() : null
       });
       // Optimistic update for faster UI response
       setGuests(prevGuests => 
         prevGuests.map(guest => 
           guest.id === guestId 
-            ? { ...guest, checkedIn: true, checkInTime: new Date() }
+            ? { 
+                ...guest, 
+                checkedIn: newStatus, 
+                checkInTime: newStatus ? new Date() : null 
+              }
             : guest
         )
       );
     } catch (error) {
       console.error('Error updating guest:', error);
-      // Revert optimistic update on error
-      await loadGuests();
     }
-  }, [loadGuests]);
+  }, []);
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
@@ -183,7 +194,7 @@ const Guestlist = () => {
       {/* Main Content */}
       <main className="main-content">
         {/* Import/Export Buttons */}
-        <div className="action-buttons">
+        <div className="action-buttons fade-in">
           <button className="btn btn-primary" onClick={handleImportCSV}>
             <i className="fas fa-upload"></i>
             Import CSV
@@ -195,7 +206,7 @@ const Guestlist = () => {
         </div>
 
         {/* Check-in Statistics */}
-        <div className="stats-section">
+        <div className="stats-section fade-in fade-in-delay-1">
           <div className="stats-item">
             <span className="stats-label">Checked in:</span>
             <span className="stats-count">{checkedInCount}</span>
@@ -207,19 +218,19 @@ const Guestlist = () => {
         </div>
 
         {/* Guest List */}
-        <div className="guest-list">
+        <div className="guest-list fade-in fade-in-delay-2">
           {filteredGuests.length === 0 ? (
             <div className="empty-state">
               {guests.length === 0 ? 'No guests imported yet. Click "Import CSV" to get started!' : 'No guests match your search criteria.'}
             </div>
           ) : (
-            filteredGuests.map(guest => (
-              <div key={guest.id} className="guest-item">
+            filteredGuests.map((guest, index) => (
+              <div key={guest.id} className={`guest-item fade-in fade-in-delay-${Math.min(3 + Math.floor(index / 5), 4)}`}>
                 <div className="guest-name">{guest.firstName} {guest.secondName}</div>
+                <div className="guest-price">{guest.price} kr</div>
                 <button
                   className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
-                  onClick={() => !guest.checkedIn && handleCheckIn(guest.id)}
-                  disabled={guest.checkedIn}
+                  onClick={() => handleCheckIn(guest.id, guest.checkedIn)}
                 >
                   {guest.checkedIn ? 'Checked In' : 'Check-in'}
                 </button>
