@@ -32,23 +32,18 @@ const Dashboard = ({ onLogout }) => {
   return (
     <div className="cercino-app-screen">
       <div className="cercino-container">
-        {/* CERCINO Header */}
-        <header className="cercino-header">
-          <h1 className="cercino-title">CERCINO</h1>
-          
-          {/* Navigation Buttons */}
-          <div className="cercino-nav-buttons">
-            <button className="nav-btn">Create event</button>
-            <button className="nav-btn">Edit Guest</button>
-            <button className="nav-btn">Import CSV</button>
-            <button className="nav-btn">Export CSV</button>
-          </div>
-        </header>
-
         {/* Main Content */}
         <main className="cercino-main">
               {/* DISCIPLINE Artwork Section */}
               <div className="discipline-section">
+                {/* Navigation Buttons Over Card */}
+                <div className="buttons-over-card">
+                  <button className="nav-btn">Create event</button>
+                  <button className="nav-btn">Edit Guest</button>
+                  <button className="nav-btn">Import CSV</button>
+                  <button className="nav-btn">Export CSV</button>
+                </div>
+                
                 <div className="discipline-artwork">
                   <div className="artwork-content">
                 <div className={`upload-card ${uploadedImage ? 'has-image' : ''}`}>
