@@ -1,88 +1,58 @@
 import React, { useState } from 'react';
 
-const LoginScreen = ({ onLogin, onBack }) => {
-  const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
-  });
+const LoginScreen = ({ onLogin }) => {
+  const [roomNumber, setRoomNumber] = useState('');
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setRoomNumber(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Simple validation - in real app, this would connect to authentication
-    if (credentials.email && credentials.password) {
+    if (roomNumber.trim()) {
       onLogin();
     }
   };
 
   return (
-    <div className="login-screen">
-      <div className="login-container">
-        {/* Header */}
-        <div className="login-header">
-          <button className="back-btn" onClick={onBack}>
-            <i className="fas fa-arrow-left"></i>
-          </button>
-          <h1 className="login-title">Welcome Back</h1>
-          <p className="login-subtitle">Sign in to your admin panel</p>
+    <div className="hotel-login-screen">
+      {/* Top Section - Professional Image */}
+      <div className="hotel-image-section">
+        <div className="hotel-staff-image">
+          <div className="staff-portrait">
+            <div className="staff-avatar">
+              <i className="fas fa-user-tie"></i>
+            </div>
+          </div>
+        </div>
+        <div className="image-gradient-overlay"></div>
+      </div>
+
+      {/* Bottom Section - Login Form */}
+      <div className="hotel-form-section">
+        <div className="hotel-welcome-text">
+          <h2 className="hotel-subtitle">Welcome to Cercino</h2>
+          <h1 className="hotel-title">Your Wish is Our Command</h1>
         </div>
 
-        {/* Login Form */}
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+        <form className="hotel-login-form" onSubmit={handleSubmit}>
+          <div className="hotel-input-group">
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={credentials.email}
+              type="text"
+              className="hotel-room-input"
+              placeholder="Room Number"
+              value={roomNumber}
               onChange={handleInputChange}
-              placeholder="admin@cercino.eu"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleInputChange}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          <button type="submit" className="login-btn">
-            <i className="fas fa-sign-in-alt"></i>
-            Sign In
+          <button type="submit" className="hotel-explore-btn">
+            Explore Services
+            <i className="fas fa-arrow-up-right"></i>
           </button>
         </form>
-
-        {/* Bottom Navigation */}
-        <div className="bottom-navigation">
-          <div className="nav-item">
-            <i className="fas fa-users"></i>
-            <span>Guests</span>
-          </div>
-          <div className="nav-item">
-            <i className="fas fa-chart-bar"></i>
-            <span>Stats</span>
-          </div>
-          <div className="nav-item">
-            <i className="fas fa-user"></i>
-            <span>Profile</span>
-          </div>
-        </div>
       </div>
     </div>
   );

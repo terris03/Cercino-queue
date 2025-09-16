@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import WelcomeScreen from './components/WelcomeScreen';
 import LoginScreen from './components/LoginScreen';
 import GuestlistScreen from './components/GuestlistScreen';
 import StatisticsScreen from './components/StatisticsScreen';
@@ -7,25 +6,9 @@ import ProfileScreen from './components/ProfileScreen';
 import './App.css';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('welcome');
+  const [currentScreen, setCurrentScreen] = useState('login');
   const [slideDirection, setSlideDirection] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleNext = () => {
-    setSlideDirection('slide-out-left');
-    setTimeout(() => {
-      setCurrentScreen('login');
-      setSlideDirection('slide-in-right');
-    }, 300);
-  };
-
-  const handleBack = () => {
-    setSlideDirection('slide-out-right');
-    setTimeout(() => {
-      setCurrentScreen('welcome');
-      setSlideDirection('slide-in-left');
-    }, 300);
-  };
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -40,13 +23,13 @@ function App() {
     setIsLoggedIn(false);
     setSlideDirection('slide-out-right');
     setTimeout(() => {
-      setCurrentScreen('welcome');
+      setCurrentScreen('login');
       setSlideDirection('slide-in-left');
     }, 300);
   };
 
   const handleNavigation = (screen) => {
-    if (isLoggedIn) {
+    if (isLoggedIn && screen !== currentScreen) {
       setSlideDirection('slide-out-left');
       setTimeout(() => {
         setCurrentScreen(screen);
@@ -59,16 +42,10 @@ function App() {
     const screenClass = `screen ${slideDirection}`;
     
     switch (currentScreen) {
-      case 'welcome':
-        return (
-          <div className={screenClass}>
-            <WelcomeScreen onNext={handleNext} />
-          </div>
-        );
       case 'login':
         return (
           <div className={screenClass}>
-            <LoginScreen onLogin={handleLogin} onBack={handleBack} />
+            <LoginScreen onLogin={handleLogin} />
           </div>
         );
       case 'guestlist':

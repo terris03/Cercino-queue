@@ -185,113 +185,135 @@ code {
   line-height: 1.4;
 }
 
-/* Login Screen */
-.login-screen {
+/* Hotel-Style Login Screen */
+.hotel-login-screen {
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  overflow-x: hidden;
-  max-width: 100vw;
+  background: #000000;
+  overflow: hidden;
 }
 
-.login-container {
+.hotel-image-section {
   flex: 1;
+  position: relative;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   display: flex;
-  flex-direction: column;
-  padding: 60px 20px 20px 20px;
-  max-width: 400px;
-  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.login-header {
-  margin-bottom: 40px;
-}
-
-.back-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  color: #ffffff;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 24px;
-  width: 48px;
-  height: 48px;
+.hotel-staff-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+.staff-portrait {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.login-title {
+.staff-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: #ffffff;
+}
+
+.image-gradient-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent 0%, #000000 100%);
+}
+
+.hotel-form-section {
+  background: #000000;
+  padding: 40px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.hotel-welcome-text {
+  text-align: center;
+}
+
+.hotel-subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: #888888;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.hotel-title {
   font-size: 28px;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 8px;
+  margin: 0;
   letter-spacing: -0.5px;
 }
 
-.login-subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 400;
-}
-
-.login-form {
+.hotel-login-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-bottom: auto;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.hotel-input-group {
+  position: relative;
 }
 
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.form-group input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.hotel-room-input {
+  width: 100%;
+  background: #333333;
+  border: 1px solid #555555;
   border-radius: 12px;
   color: #ffffff;
-  padding: 16px;
+  padding: 16px 20px;
   font-size: 16px;
   transition: all 0.3s ease;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  box-sizing: border-box;
 }
 
-.form-group input:focus {
+.hotel-room-input:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.15);
+  border-color: #4ecdc4;
+  background: #444444;
 }
 
-.form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+.hotel-room-input::placeholder {
+  color: #888888;
 }
 
-.login-btn {
-  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+.hotel-explore-btn {
+  width: 100%;
+  background: #ffffff;
   border: none;
   border-radius: 12px;
-  color: #ffffff;
-  padding: 16px;
+  color: #000000;
+  padding: 16px 20px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -300,13 +322,16 @@ code {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 20px;
 }
 
-.login-btn:hover {
-  background: linear-gradient(135deg, #3db8a8 0%, #3a8a7a 100%);
+.hotel-explore-btn:hover {
+  background: #f0f0f0;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(78, 205, 196, 0.4);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
+}
+
+.hotel-explore-btn i {
+  font-size: 14px;
 }
 
 /* Guestlist Screen */
