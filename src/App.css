@@ -682,7 +682,7 @@ body {
 .upload-card.expanded {
   height: 70vh;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(0, 0, 0, 0.95) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 100;
@@ -697,8 +697,8 @@ body {
 }
 
 .upload-card.has-image.expanded {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 2px solid rgba(255, 255, 255, 0.4) !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
   padding: 20px !important;
   margin: 0 !important;
 }
@@ -709,7 +709,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
