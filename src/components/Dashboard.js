@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const Dashboard = ({ onLogout }) => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -27,6 +28,15 @@ const Dashboard = ({ onLogout }) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}/${month}/${day}`;
+  };
+
+  const handleCardClick = () => {
+    setIsCardExpanded(!isCardExpanded);
+  };
+
+  const handleCloseEventInfo = (e) => {
+    e.stopPropagation();
+    setIsCardExpanded(false);
   };
 
   return (
@@ -58,7 +68,10 @@ const Dashboard = ({ onLogout }) => {
                 
                 <div className="discipline-artwork">
                   <div className="artwork-content">
-                <div className={`upload-card ${uploadedImage ? 'has-image' : ''}`}>
+                <div 
+                  className={`upload-card ${uploadedImage ? 'has-image' : ''} ${isCardExpanded ? 'expanded' : ''}`}
+                  onClick={handleCardClick}
+                >
                   <input 
                     type="file" 
                     accept="image/*" 
@@ -66,6 +79,51 @@ const Dashboard = ({ onLogout }) => {
                     style={{ display: 'none' }}
                     id="image-upload"
                   />
+                  
+                  {/* Event Information Content */}
+                  <div className="event-info-content">
+                    <div className="event-info-header">
+                      <h3 className="event-info-title">Event Details</h3>
+                      <button className="event-info-close" onClick={handleCloseEventInfo}>
+                        ×
+                      </button>
+                    </div>
+                    
+                    <div className="event-info-details">
+                      <div className="event-info-item">
+                        <div className="event-info-icon">📅</div>
+                        <p className="event-info-text">Date: {formatDate(selectedDate)}</p>
+                      </div>
+                      <div className="event-info-item">
+                        <div className="event-info-icon">📍</div>
+                        <p className="event-info-text">Location: TBA</p>
+                      </div>
+                      <div className="event-info-item">
+                        <div className="event-info-icon">🎵</div>
+                        <p className="event-info-text">Genre: Electronic</p>
+                      </div>
+                      <div className="event-info-item">
+                        <div className="event-info-icon">👥</div>
+                        <p className="event-info-text">Capacity: 500 guests</p>
+                      </div>
+                    </div>
+                    
+                    <div className="event-info-stats">
+                      <div className="event-stat">
+                        <p className="event-stat-number">12</p>
+                        <p className="event-stat-label">Checked In</p>
+                      </div>
+                      <div className="event-stat">
+                        <p className="event-stat-number">488</p>
+                        <p className="event-stat-label">Remaining</p>
+                      </div>
+                      <div className="event-stat">
+                        <p className="event-stat-number">2.4%</p>
+                        <p className="event-stat-label">Capacity</p>
+                      </div>
+                    </div>
+                  </div>
+                  
                   {uploadedImage ? (
                     <div className="uploaded-image-container">
                       <img 
@@ -76,7 +134,10 @@ const Dashboard = ({ onLogout }) => {
                       <label htmlFor="image-upload" className="change-image-button">
                         Change Image
                       </label>
-                      <div className="date-overlay" onClick={() => document.getElementById('date-picker').showPicker()}>
+                      <div className="date-overlay" onClick={(e) => {
+                        e.stopPropagation();
+                        document.getElementById('date-picker').showPicker();
+                      }}>
                         <input
                           type="date"
                           id="date-picker"
