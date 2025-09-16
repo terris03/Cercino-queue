@@ -198,7 +198,12 @@ code {
 .hotel-image-section {
   flex: 1;
   position: relative;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+    url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +228,8 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
 .staff-avatar {
@@ -236,6 +242,7 @@ code {
   justify-content: center;
   font-size: 60px;
   color: #ffffff;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .image-gradient-overlay {
@@ -243,8 +250,8 @@ code {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 150px;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.7) 70%, #000000 100%);
+  height: 200px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 20%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.8) 80%, #000000 100%);
 }
 
 .hotel-form-section {
