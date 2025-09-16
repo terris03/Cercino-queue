@@ -38,8 +38,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage": ".",
-  "devDependencies": {
-    "audit-ci": "^7.1.0"
-  }
+  "homepage": "."
 }
