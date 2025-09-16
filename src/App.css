@@ -458,11 +458,7 @@ code {
   display: flex;
   flex-direction: column;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(255, 20, 147, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 60% 60%, rgba(75, 0, 130, 0.2) 0%, transparent 50%),
-    linear-gradient(135deg, #FF6B35 0%, #F7931E 25%, #4ECDC4 50%, #45B7D1 75%, #96CEB4 100%);
+    radial-gradient(circle at bottom center, #E8E8E8 0%, #C0C0C0 30%, #A0A0A0 60%, #808080 80%, #404040 100%);
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 }
@@ -590,24 +586,37 @@ code {
   min-height: 200px;
 }
 
-.psychedelic-art {
+.upload-card {
+  width: 100%;
+  height: 200px;
+  background: #ffffff;
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  border: 2px dashed #cccccc;
+  transition: all 0.3s ease;
+}
+
+.upload-card:hover {
+  border-color: #999999;
+  background: #f9f9f9;
+}
+
+.upload-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  font-size: 48px;
+  height: 100%;
 }
 
-.figure-left {
-  font-size: 40px;
-}
-
-.figure-center {
-  font-size: 60px;
-}
-
-.figure-right {
-  font-size: 40px;
+.upload-plus {
+  font-size: 72px;
+  font-weight: 300;
+  color: #000000;
+  line-height: 1;
 }
 
 /* Glass Effect Guest List */

@@ -1,6 +1,19 @@
 import React from 'react';
 
 const Dashboard = ({ onLogout }) => {
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        // You can handle the uploaded image here
+        console.log('Image uploaded:', event.target.result);
+        // For now, just log it - you can add state management later
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="cercino-app-screen">
       <div className="cercino-container">
@@ -24,10 +37,17 @@ const Dashboard = ({ onLogout }) => {
             <div className="discipline-artwork">
               <div className="discipline-title">DISCIPLINE 27-Ⅱ</div>
               <div className="artwork-content">
-                <div className="psychedelic-art">
-                  <div className="figure-left">👤</div>
-                  <div className="figure-center">👩🏿‍🦱</div>
-                  <div className="figure-right">🪐</div>
+                <div className="upload-card">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={(e) => handleImageUpload(e)}
+                    style={{ display: 'none' }}
+                    id="image-upload"
+                  />
+                  <label htmlFor="image-upload" className="upload-button">
+                    <div className="upload-plus">+</div>
+                  </label>
                 </div>
               </div>
             </div>
