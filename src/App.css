@@ -458,7 +458,7 @@ code {
   display: flex;
   flex-direction: column;
   background: 
-    radial-gradient(circle at bottom center, #E8E8E8 0%, #C0C0C0 30%, #A0A0A0 60%, #808080 80%, #404040 100%);
+    radial-gradient(circle at center, #1a1a1a 0%, #000000 50%, #0a0a0a 100%);
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 }
@@ -558,7 +558,7 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 10px 20px;
 }
 
 .discipline-artwork {
