@@ -558,8 +558,8 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
+  justify-content: flex-start;
+  padding: 20px;
   gap: 20px;
 }
 
@@ -576,6 +576,53 @@ code {
 
 .buttons-over-card::-webkit-scrollbar {
   display: none;
+}
+
+.search-filter-section {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .discipline-artwork {
@@ -724,25 +771,25 @@ code {
 
 /* Glass Effect Guest List */
 .glass-guest-list-container {
-  background: 
-    radial-gradient(circle at center, #1a1a1a 0%, #000000 50%, #0a0a0a 100%);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px 0;
-  max-height: 50vh;
-  overflow-y: auto;
+  background: transparent;
+  padding: 0;
+  max-height: none;
+  overflow-y: visible;
+  width: 100%;
+  max-width: 400px;
 }
 
 .glass-guest-list {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 20px;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+  width: 100%;
 }
 
 .guest-item-glass {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
   margin-bottom: 8px;
@@ -765,6 +812,29 @@ code {
   font-weight: 500;
   color: #ffffff;
   margin-right: 8px;
+}
+
+.checkin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.checkin-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.checkin-btn:active {
+  transform: translateY(0);
 }
 
 .guest-status-glass {
