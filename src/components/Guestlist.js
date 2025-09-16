@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -23,7 +23,7 @@ const Guestlist = () => {
     setFilteredGuests(filtered);
   }, [guests, searchTerm]);
 
-  const loadGuests = async () => {
+  const loadGuests = useCallback(async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'guests'));
       const guestsData = querySnapshot.docs.map(doc => ({
@@ -34,7 +34,7 @@ const Guestlist = () => {
     } catch (error) {
       console.error('Error loading guests:', error);
     }
-  };
+  }, []);
 
   const handleImportCSV = () => {
     fileInputRef.current.click();
@@ -101,18 +101,27 @@ const Guestlist = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  const handleCheckIn = async (guestId) => {
+  const handleCheckIn = useCallback(async (guestId) => {
     try {
       const guestRef = doc(db, 'guests', guestId);
       await updateDoc(guestRef, {
         checkedIn: true,
         checkInTime: new Date()
       });
-      await loadGuests(); // Reload the guest list
+      // Optimistic update for faster UI response
+      setGuests(prevGuests => 
+        prevGuests.map(guest => 
+          guest.id === guestId 
+            ? { ...guest, checkedIn: true, checkInTime: new Date() }
+            : guest
+        )
+      );
     } catch (error) {
       console.error('Error updating guest:', error);
+      // Revert optimistic update on error
+      await loadGuests();
     }
-  };
+  }, [loadGuests]);
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
@@ -122,6 +131,13 @@ const Guestlist = () => {
       default: return '#6b7280'; // Gray
     }
   };
+
+  const checkedInCount = useMemo(() => 
+    guests.filter(guest => guest.checkedIn).length, [guests]
+  );
+  const nonCheckedCount = useMemo(() => 
+    guests.filter(guest => !guest.checkedIn).length, [guests]
+  );
 
   return (
     <div className="guestlist-page">
@@ -182,11 +198,11 @@ const Guestlist = () => {
         <div className="stats-section">
           <div className="stats-item">
             <span className="stats-label">Checked in:</span>
-            <span className="stats-count">{guests.filter(guest => guest.checkedIn).length}</span>
+            <span className="stats-count">{checkedInCount}</span>
           </div>
           <div className="stats-item">
             <span className="stats-label">Non-checked:</span>
-            <span className="stats-count">{guests.filter(guest => !guest.checkedIn).length}</span>
+            <span className="stats-count">{nonCheckedCount}</span>
           </div>
         </div>
 
