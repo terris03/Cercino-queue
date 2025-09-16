@@ -48,7 +48,6 @@ const Guestlist = () => {
     reader.onload = async (e) => {
       const text = e.target.result;
       const lines = text.split('\n');
-      const headers = lines[0].split(',').map(h => h.trim());
       
       const newGuests = [];
       for (let i = 1; i < lines.length; i++) {
