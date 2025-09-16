@@ -7,68 +7,49 @@ import './App.css';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
-  const [slideDirection, setSlideDirection] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    setSlideDirection('slide-out-left');
-    setTimeout(() => {
-      setCurrentScreen('guestlist');
-      setSlideDirection('slide-in-right');
-    }, 300);
+    setCurrentScreen('guestlist');
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setSlideDirection('slide-out-right');
-    setTimeout(() => {
-      setCurrentScreen('login');
-      setSlideDirection('slide-in-left');
-    }, 300);
+    setCurrentScreen('login');
   };
 
   const handleNavigation = (screen) => {
     if (isLoggedIn && screen !== currentScreen) {
-      setSlideDirection('slide-out-left');
-      setTimeout(() => {
-        setCurrentScreen(screen);
-        setSlideDirection('slide-in-right');
-      }, 300);
+      setCurrentScreen(screen);
     }
   };
 
   const renderScreen = () => {
-    const screenClass = `screen ${slideDirection}`;
-    
-    switch (currentScreen) {
-      case 'login':
-        return (
-          <div className={screenClass}>
+    return (
+      <>
+        <div className={`screen ${currentScreen === 'login' ? 'active' : ''}`}>
+          <div className="screen-content">
             <LoginScreen onLogin={handleLogin} />
           </div>
-        );
-      case 'guestlist':
-        return (
-          <div className={screenClass}>
+        </div>
+        <div className={`screen ${currentScreen === 'guestlist' ? 'active' : ''}`}>
+          <div className="screen-content">
             <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} />
           </div>
-        );
-      case 'statistics':
-        return (
-          <div className={screenClass}>
+        </div>
+        <div className={`screen ${currentScreen === 'statistics' ? 'active' : ''}`}>
+          <div className="screen-content">
             <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} />
           </div>
-        );
-      case 'profile':
-        return (
-          <div className={screenClass}>
+        </div>
+        <div className={`screen ${currentScreen === 'profile' ? 'active' : ''}`}>
+          <div className="screen-content">
             <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} />
           </div>
-        );
-      default:
-        return null;
-    }
+        </div>
+      </>
+    );
   };
 
   return (
