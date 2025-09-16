@@ -531,25 +531,26 @@ code {
   letter-spacing: -0.022em;
 }
 
-/* Spotify-like Event Scroller */
+/* Full Width Event Scroller */
 .spotify-scroller {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 0;
   overflow: hidden;
 }
 
 .spotify-container {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 0;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-snap-type: x mandatory;
-  padding: 0 20px;
+  padding: 0;
+  width: 100%;
 }
 
 .spotify-container::-webkit-scrollbar {
@@ -558,27 +559,32 @@ code {
 
 .spotify-event-card {
   flex-shrink: 0;
-  width: 280px;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   scroll-snap-align: center;
   transition: transform 0.3s ease;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .spotify-event-card.active {
-  transform: scale(1.05);
+  transform: scale(1);
 }
 
 /* Glassmorphism Event Card */
 .glassmorphism-event-card {
   position: relative;
-  width: 280px;
-  height: 350px;
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
   background: linear-gradient(135deg, #FF6B35 0%, #F7931E 25%, #4ECDC4 50%, #45B7D1 75%, #96CEB4 100%);
   border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 
@@ -712,18 +718,18 @@ code {
 /* Black Guest List */
 .guest-list-black {
   width: 100%;
-  max-width: 280px;
+  max-width: 500px;
   background: #000000;
   border-radius: 12px;
-  padding: 16px;
-  margin-top: 20px;
+  padding: 20px;
+  margin-top: 30px;
 }
 
 .guest-item-black {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 0;
+  gap: 12px;
+  padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -732,24 +738,24 @@ code {
 }
 
 .guest-name-black {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   color: #ffffff;
   flex: 1;
 }
 
 .guest-plus {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   color: #ffffff;
-  margin-right: 8px;
+  margin-right: 12px;
 }
 
 .guest-status {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 4px 12px;
+  border-radius: 6px;
   text-transform: uppercase;
 }
 
@@ -783,12 +789,13 @@ code {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
   background: #ffffff;
   border: 3px dashed #000000;
   border-radius: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .add-event-icon {
