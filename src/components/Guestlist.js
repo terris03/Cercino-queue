@@ -190,7 +190,6 @@ const Guestlist = () => {
         <div className="guest-list-container">
           <div className="guest-list-header">
             <div className="column">First Name</div>
-            <div className="column">Second Name</div>
             <div className="column">Price</div>
             <div className="column">Action</div>
           </div>
@@ -203,7 +202,6 @@ const Guestlist = () => {
               filteredGuests.map(guest => (
                 <div key={guest.id} className="guest-item">
                   <div className="guest-first-name">{guest.firstName}</div>
-                  <div className="guest-second-name">{guest.secondName}</div>
                   <div className="guest-price">€{guest.price}</div>
                   <button 
                     className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}

@@ -234,7 +234,7 @@
 
 .guest-list-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr auto auto;
   gap: 15px;
   padding: 20px;
   background: rgba(255, 255, 255, 0.1);
@@ -245,7 +245,7 @@
 
 .guest-item {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr auto auto;
   gap: 15px;
   padding: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -357,13 +357,8 @@
   
   .guest-list-header,
   .guest-item {
-    grid-template-columns: 1fr 1fr auto;
+    grid-template-columns: 1fr auto auto;
     gap: 10px;
-  }
-  
-  .guest-list-header .column:nth-child(2),
-  .guest-item .guest-second-name {
-    display: none;
   }
 }
 
