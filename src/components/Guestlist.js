@@ -1,15 +1,54 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { collection, addDoc, getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
-import Tutorial from './Tutorial';
 
 const Guestlist = () => {
   const [guests, setGuests] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [filteredGuests, setFilteredGuests] = useState([]);
-  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialIndex, setTutorialIndex] = useState(0);
   const fileInputRef = useRef(null);
+  const tutorialRef = useRef(null);
+
+  const tutorialCards = [
+    {
+      icon: '👋',
+      title: 'Welcome to Cercino!',
+      description: 'Your professional guestlist management system for events. Let\'s get you started!',
+      color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    {
+      icon: '📥',
+      title: 'Import Your Guest List',
+      description: 'Click "Import CSV" to upload your guest list. Make sure your CSV has columns: First Name, Second Name, Price, Status',
+      color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    },
+    {
+      icon: '✅',
+      title: 'Check-In Guests',
+      description: 'Click the "Check-in" button next to each guest to mark them as arrived. You can toggle this status anytime!',
+      color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    },
+    {
+      icon: '📤',
+      title: 'Export Updated List',
+      description: 'Click "Export CSV" to download your updated guest list with current check-in statuses for your records.',
+      color: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    },
+    {
+      icon: '🔍',
+      title: 'Search & Filter',
+      description: 'Use the search bar to find guests quickly. The filter button will help you organize by status, price, or name.',
+      color: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    },
+    {
+      icon: '📱',
+      title: 'Real-Time Updates',
+      description: 'All changes sync instantly across devices! If multiple people are managing the event, everyone sees updates in real-time.',
+      color: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
+    }
+  ];
 
   // Set up real-time listener for guests
   useEffect(() => {
@@ -172,6 +211,31 @@ const Guestlist = () => {
     guests.filter(guest => !guest.checkedIn).length, [guests]
   );
 
+  // Tutorial swipe functionality
+  const handleTutorialSwipe = (direction) => {
+    if (direction === 'next' && tutorialIndex < tutorialCards.length - 1) {
+      setTutorialIndex(tutorialIndex + 1);
+    } else if (direction === 'prev' && tutorialIndex > 0) {
+      setTutorialIndex(tutorialIndex - 1);
+    }
+  };
+
+  const handleTutorialTouchStart = (e) => {
+    const startX = e.touches[0].clientX;
+    const handleTouchEnd = (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          handleTutorialSwipe('next');
+        } else {
+          handleTutorialSwipe('prev');
+        }
+      }
+    };
+    document.addEventListener('touchend', handleTouchEnd, { once: true });
+  };
+
   return (
     <div className="guestlist-page">
       {/* Header */}
@@ -249,28 +313,86 @@ const Guestlist = () => {
         {/* Guest List */}
         <div className="guest-list fade-in fade-in-delay-2">
           {filteredGuests.length === 0 ? (
-            <div className="empty-state">
-              {guests.length === 0 ? (
-                <div>
-                  <div style={{ marginBottom: '20px' }}>
-                    <i className="fas fa-users" style={{ fontSize: '3rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '15px' }}></i>
-                    <h3 style={{ marginBottom: '10px', color: 'white' }}>Welcome to Cercino!</h3>
-                    <p style={{ marginBottom: '20px' }}>No guests imported yet. Let's get you started!</p>
-                  </div>
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={() => setShowTutorial(true)}
-                    style={{ marginBottom: '15px' }}
+            guests.length === 0 ? (
+              <div className="tutorial-carousel-container">
+                {/* Tutorial Progress Dots */}
+                <div className="tutorial-progress-dots">
+                  {tutorialCards.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`tutorial-dot ${index === tutorialIndex ? 'active' : ''}`}
+                      onClick={() => setTutorialIndex(index)}
+                    />
+                  ))}
+                </div>
+
+                {/* Tutorial Cards */}
+                <div 
+                  className="tutorial-cards-wrapper"
+                  onTouchStart={handleTutorialTouchStart}
+                >
+                  <div 
+                    className="tutorial-cards-track"
+                    style={{
+                      transform: `translateX(-${tutorialIndex * 100}%)`,
+                      transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    }}
                   >
-                    <i className="fas fa-play-circle"></i>
-                    Take a Quick Tour
-                  </button>
-                  <div style={{ fontSize: '14px', opacity: '0.7' }}>
-                    or click "Import CSV" to upload your guest list
+                    {tutorialCards.map((card, index) => (
+                      <div key={index} className="tutorial-card-slide">
+                        <div 
+                          className="tutorial-card-content"
+                          style={{ background: card.color }}
+                        >
+                          <div className="tutorial-icon">{card.icon}</div>
+                          <h3 className="tutorial-title">{card.title}</h3>
+                          <p className="tutorial-description">{card.description}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ) : 'No guests match your search criteria.'}
-            </div>
+
+                {/* Navigation */}
+                <div className="tutorial-navigation">
+                  {tutorialIndex > 0 && (
+                    <button 
+                      className="tutorial-nav-btn prev" 
+                      onClick={() => handleTutorialSwipe('prev')}
+                    >
+                      <i className="fas fa-chevron-left"></i>
+                    </button>
+                  )}
+                  
+                  {tutorialIndex < tutorialCards.length - 1 ? (
+                    <button 
+                      className="tutorial-nav-btn next" 
+                      onClick={() => handleTutorialSwipe('next')}
+                    >
+                      <i className="fas fa-chevron-right"></i>
+                    </button>
+                  ) : (
+                    <button 
+                      className="tutorial-start-btn" 
+                      onClick={handleImportCSV}
+                    >
+                      <i className="fas fa-upload"></i>
+                      Import CSV Now
+                    </button>
+                  )}
+                </div>
+
+                {/* Swipe Hint */}
+                <div className="tutorial-swipe-hint">
+                  <i className="fas fa-hand-pointer"></i>
+                  <span>Swipe to explore more tips</span>
+                </div>
+              </div>
+            ) : (
+              <div className="empty-state">
+                No guests match your search criteria.
+              </div>
+            )
           ) : (
             filteredGuests.map((guest, index) => (
               <div key={guest.id} className={`guest-item fade-in fade-in-delay-${Math.min(3 + Math.floor(index / 5), 4)}`}>
@@ -296,11 +418,6 @@ const Guestlist = () => {
         style={{ display: 'none' }}
         onChange={handleFileUpload}
       />
-
-      {/* Tutorial Modal */}
-      {showTutorial && (
-        <Tutorial onClose={() => setShowTutorial(false)} />
-      )}
     </div>
   );
 };
