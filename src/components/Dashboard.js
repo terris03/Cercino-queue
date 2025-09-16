@@ -38,11 +38,10 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content */}
         <main className="cercino-main">
-          {/* DISCIPLINE Artwork Section */}
-          <div className="discipline-section">
-            <div className="discipline-artwork">
-              <div className="discipline-title">DISCIPLINE 27-Ⅱ</div>
-              <div className="artwork-content">
+              {/* DISCIPLINE Artwork Section */}
+              <div className="discipline-section">
+                <div className="discipline-artwork">
+                  <div className="artwork-content">
                 <div className="upload-card">
                   <input 
                     type="file" 
@@ -67,13 +66,10 @@ const Dashboard = ({ onLogout }) => {
                           value={selectedDate}
                           onChange={handleDateChange}
                           className="date-input"
-                          placeholder="Add date"
                         />
-                        {selectedDate ? (
-                          <div className="date-display">{selectedDate}</div>
-                        ) : (
-                          <div className="date-placeholder">Add date</div>
-                        )}
+                        <div className="date-display">
+                          {selectedDate ? selectedDate : "Add date"}
+                        </div>
                       </div>
                     </div>
                   ) : (
