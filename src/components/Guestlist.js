@@ -1,28 +1,35 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { collection, addDoc, getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
+import Tutorial from './Tutorial';
 
 const Guestlist = () => {
   const [guests, setGuests] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [filteredGuests, setFilteredGuests] = useState([]);
+  const [showTutorial, setShowTutorial] = useState(false);
   const fileInputRef = useRef(null);
 
   // Set up real-time listener for guests
   useEffect(() => {
+    console.log('Setting up real-time listener...');
     const unsubscribe = onSnapshot(collection(db, 'guests'), (querySnapshot) => {
       const guestsData = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       console.log('Real-time update: Loaded', guestsData.length, 'guests');
+      console.log('Guest data:', guestsData);
       setGuests(guestsData);
     }, (error) => {
       console.error('Real-time listener error:', error);
     });
 
-    return () => unsubscribe();
+    return () => {
+      console.log('Cleaning up real-time listener');
+      unsubscribe();
+    };
   }, []);
 
   // Filter guests based on search term
@@ -243,7 +250,26 @@ const Guestlist = () => {
         <div className="guest-list fade-in fade-in-delay-2">
           {filteredGuests.length === 0 ? (
             <div className="empty-state">
-              {guests.length === 0 ? 'No guests imported yet. Click "Import CSV" to get started!' : 'No guests match your search criteria.'}
+              {guests.length === 0 ? (
+                <div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <i className="fas fa-users" style={{ fontSize: '3rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '15px' }}></i>
+                    <h3 style={{ marginBottom: '10px', color: 'white' }}>Welcome to Cercino!</h3>
+                    <p style={{ marginBottom: '20px' }}>No guests imported yet. Let's get you started!</p>
+                  </div>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={() => setShowTutorial(true)}
+                    style={{ marginBottom: '15px' }}
+                  >
+                    <i className="fas fa-play-circle"></i>
+                    Take a Quick Tour
+                  </button>
+                  <div style={{ fontSize: '14px', opacity: '0.7' }}>
+                    or click "Import CSV" to upload your guest list
+                  </div>
+                </div>
+              ) : 'No guests match your search criteria.'}
             </div>
           ) : (
             filteredGuests.map((guest, index) => (
@@ -270,6 +296,11 @@ const Guestlist = () => {
         style={{ display: 'none' }}
         onChange={handleFileUpload}
       />
+
+      {/* Tutorial Modal */}
+      {showTutorial && (
+        <Tutorial onClose={() => setShowTutorial(false)} />
+      )}
     </div>
   );
 };
