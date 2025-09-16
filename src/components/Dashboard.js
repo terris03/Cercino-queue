@@ -2,150 +2,98 @@ import React from 'react';
 
 const Dashboard = ({ onLogout }) => {
   return (
-    <div className="event-app-screen">
-      <div className="event-app-container">
-        {/* Header */}
-        <header className="event-header">
-          <h1 className="header-title">Home</h1>
+    <div className="cercino-app-screen">
+      <div className="cercino-container">
+        {/* CERCINO Header */}
+        <header className="cercino-header">
+          <h1 className="cercino-title">CERCINO</h1>
           
-          {/* Search and Create Section */}
-          <div className="search-create-section">
-            <div className="search-input-container">
-              <input 
-                type="text" 
-                placeholder="Search events..." 
-                className="search-input"
-              />
-              <button className="create-event-btn">
-                Create Event
-              </button>
-            </div>
+          {/* Navigation Buttons */}
+          <div className="cercino-nav-buttons">
+            <button className="nav-btn">Create event</button>
+            <button className="nav-btn">Edit Guest</button>
+            <button className="nav-btn">Import CSV</button>
+            <button className="nav-btn">Export CSV</button>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="event-main">
-          {/* Spotify-like Event Scroller */}
-          <div className="spotify-scroller">
-            <div className="spotify-container">
-              {/* Tutorial Event Card */}
-              <div className="spotify-event-card active">
-                <div className="glassmorphism-event-card">
-                  <div className="featured-tag-glass">FEATURED</div>
-                  <div className="event-artwork-glass">
-                    <div className="sun-moon-artwork">
-                      <div className="sun-face">☀️</div>
-                      <div className="moon-face">🌙</div>
-                    </div>
-                  </div>
-                  <div className="event-details-glass">
-                    <div className="event-date-glass">SAMEDI 08 JUIN - 19H-02H</div>
-                    <div className="event-title-row-glass">
-                      <button className="play-btn-glass">
-                        <i className="fas fa-play"></i>
-                      </button>
-                      <h2 className="event-title-glass">NOCHE DE VERANO</h2>
-                      <button className="heart-btn-glass">
-                        <i className="fas fa-heart"></i>
-                      </button>
-                    </div>
-                    <div className="event-info-glass">
-                      <div className="event-subtitle-glass">POOL PARTY GIRLS ONLY - La Bringue</div>
-                      <div className="event-location-glass">The Palm Paris</div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Guest List */}
-                <div className="guest-list-black">
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Aaron Garrido</span>
-                    <span className="guest-status vip">VIP</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Ajay James</span>
-                    <span className="guest-plus">+5</span>
-                    <span className="guest-status staff">Staff</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Alan Tudyk</span>
-                    <span className="guest-plus">+5</span>
-                    <span className="guest-status staff">Staff</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Bill O'Reilly</span>
-                    <span className="guest-status staff">Staff</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Brett Lynch</span>
-                    <span className="guest-status vip">VIP</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Brett Stimely</span>
-                    <span className="guest-plus">+2</span>
-                    <span className="guest-status press">Press</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Brian Call</span>
-                    <span className="guest-plus">+4 (free)</span>
-                    <span className="guest-status staff">Staff</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Buzz Aldrin</span>
-                    <span className="guest-plus">+20 (free)</span>
-                    <span className="guest-status vip">VIP</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Chris a. Robinson</span>
-                    <span className="guest-plus">+2</span>
-                    <span className="guest-status vip">VIP</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Drew Pillsbury</span>
-                    <span className="guest-status press">Press</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Dustin Dennard</span>
-                    <span className="guest-status press">Press</span>
-                  </div>
-                  <div className="guest-item-black">
-                    <span className="guest-name-black">Frances McDormand</span>
-                    <span className="guest-plus">+10 (free)</span>
-                    <span className="guest-status press">Press</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Add New Event Card */}
-              <div className="spotify-event-card add-event">
-                <div className="add-event-content">
-                  <div className="add-event-icon">+</div>
-                  <h3 className="add-event-title">Add Event</h3>
-                  <p className="add-event-subtitle">Create new event</p>
+        <main className="cercino-main">
+          {/* DISCIPLINE Artwork Section */}
+          <div className="discipline-section">
+            <div className="discipline-artwork">
+              <div className="discipline-title">DISCIPLINE 27-Ⅱ</div>
+              <div className="artwork-content">
+                <div className="psychedelic-art">
+                  <div className="figure-left">👤</div>
+                  <div className="figure-center">👩🏿‍🦱</div>
+                  <div className="figure-right">🪐</div>
                 </div>
               </div>
             </div>
           </div>
-        </main>
 
-        {/* Bottom Navigation */}
-        <nav className="event-bottom-nav">
-          <div className="nav-item active">
-            <i className="fas fa-home"></i>
+          {/* Glass Effect Guest List */}
+          <div className="glass-guest-list-container">
+            <div className="glass-guest-list">
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Aaron Garrido</span>
+                <span className="guest-status-glass vip">VIP</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Ajay James</span>
+                <span className="guest-plus-glass">+5</span>
+                <span className="guest-status-glass staff">Staff</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Alan Tudyk</span>
+                <span className="guest-plus-glass">+5</span>
+                <span className="guest-status-glass staff">Staff</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Bill O'Reilly</span>
+                <span className="guest-status-glass staff">Staff</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Brett Lynch</span>
+                <span className="guest-status-glass vip">VIP</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Brett Stimely</span>
+                <span className="guest-plus-glass">+2</span>
+                <span className="guest-status-glass press">Press</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Brian Call</span>
+                <span className="guest-plus-glass">+4 (free)</span>
+                <span className="guest-status-glass staff">Staff</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Buzz Aldrin</span>
+                <span className="guest-plus-glass">+20 (free)</span>
+                <span className="guest-status-glass vip">VIP</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Chris a. Robinson</span>
+                <span className="guest-plus-glass">+2</span>
+                <span className="guest-status-glass vip">VIP</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Drew Pillsbury</span>
+                <span className="guest-status-glass press">Press</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Dustin Dennard</span>
+                <span className="guest-status-glass press">Press</span>
+              </div>
+              <div className="guest-item-glass">
+                <span className="guest-name-glass">Frances McDormand</span>
+                <span className="guest-plus-glass">+10 (free)</span>
+                <span className="guest-status-glass press">Press</span>
+              </div>
+            </div>
           </div>
-          <div className="nav-item">
-            <i className="fas fa-search"></i>
-          </div>
-          <div className="nav-item nav-plus">
-            <i className="fas fa-plus"></i>
-          </div>
-          <div className="nav-item">
-            <i className="fas fa-ticket-alt"></i>
-          </div>
-          <div className="nav-item">
-            <i className="fas fa-user"></i>
-          </div>
-        </nav>
+        </main>
       </div>
     </div>
   );
