@@ -601,8 +601,10 @@ code {
 }
 
 .upload-card.has-image {
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .upload-card:hover {
@@ -635,6 +637,8 @@ code {
   display: block;
   margin: 0;
   padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .uploaded-image {
@@ -647,6 +651,7 @@ code {
   left: 0;
   margin: 0;
   padding: 0;
+  display: block;
 }
 
 .change-image-button {
