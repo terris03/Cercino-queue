@@ -3,27 +3,7 @@ import React, { useState } from 'react';
 const Dashboard = ({ onLogout }) => {
   const [isCardExpanded, setIsCardExpanded] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "DISCIPLINE 27-Ⅱ",
-      date: "",
-      image: null,
-      location: "Warehouse 9, Stockholm",
-      time: "22:00 - 06:00",
-      genre: "Techno / Electronic",
-      dressCode: "All Black",
-      age: "21+",
-      bar: "Full Service",
-      parking: "Limited",
-      capacity: 500,
-      checkedIn: 12,
-      remaining: 488,
-      totalRevenue: 47500,
-      ticketsSold: 95,
-      avgPrice: 500
-    }
-  ]);
+  const [events, setEvents] = useState([]);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   
   // Handle scroll to update current event index
@@ -323,9 +303,45 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content */}
         <main className="cercino-main">
-          {/* Horizontal Scrolling Events Container */}
-          <div className="events-horizontal-scroll" onScroll={handleScroll}>
-            {events.map((event, index) => (
+          {/* Tutorial State - Show when no events */}
+          {events.length === 0 ? (
+            <div className="tutorial-state">
+              <div className="tutorial-content">
+                <div className="tutorial-icon">
+                  <i className="fas fa-calendar-plus"></i>
+                </div>
+                <h2 className="tutorial-title">Welcome to Cercino!</h2>
+                <p className="tutorial-description">
+                  Create your first event to get started with guest management.
+                </p>
+                <div className="tutorial-steps">
+                  <div className="tutorial-step">
+                    <div className="step-number">1</div>
+                    <div className="step-text">Click "Create event" above</div>
+                  </div>
+                  <div className="tutorial-step">
+                    <div className="step-number">2</div>
+                    <div className="step-text">Fill out your event details</div>
+                  </div>
+                  <div className="tutorial-step">
+                    <div className="step-number">3</div>
+                    <div className="step-text">Upload an event image</div>
+                  </div>
+                  <div className="tutorial-step">
+                    <div className="step-number">4</div>
+                    <div className="step-text">Start managing your guests!</div>
+                  </div>
+                </div>
+                <button className="tutorial-create-btn" onClick={handleCreateEvent}>
+                  <i className="fas fa-plus"></i>
+                  Create Your First Event
+                </button>
+              </div>
+            </div>
+          ) : (
+            /* Horizontal Scrolling Events Container */
+            <div className="events-horizontal-scroll" onScroll={handleScroll}>
+              {events.map((event, index) => (
               <div key={event.id} className={`event-container ${index === currentEventIndex ? 'active' : ''}`}>
                 {/* DISCIPLINE Artwork Section */}
                 <div className="discipline-section">
@@ -549,8 +565,9 @@ const Dashboard = ({ onLogout }) => {
                 </div>
                 </div>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </main>
       </div>
     </div>
