@@ -83,7 +83,7 @@ const Dashboard = ({ onLogout }) => {
                   {/* Event Information Content */}
                   <div className="event-info-content">
                     <div className="event-info-header">
-                      <h3 className="event-info-title">Event Details</h3>
+                      <h3 className="event-info-title">DISCIPLINE 27-Ⅱ</h3>
                       <button className="event-info-close" onClick={handleCloseEventInfo}>
                         ×
                       </button>
@@ -95,16 +95,32 @@ const Dashboard = ({ onLogout }) => {
                         <p className="event-info-text">Date: {formatDate(selectedDate)}</p>
                       </div>
                       <div className="event-info-item">
+                        <div className="event-info-icon">🕐</div>
+                        <p className="event-info-text">Time: 22:00 - 06:00</p>
+                      </div>
+                      <div className="event-info-item">
                         <div className="event-info-icon">📍</div>
-                        <p className="event-info-text">Location: TBA</p>
+                        <p className="event-info-text">Location: Warehouse 9, Stockholm</p>
                       </div>
                       <div className="event-info-item">
                         <div className="event-info-icon">🎵</div>
-                        <p className="event-info-text">Genre: Electronic</p>
+                        <p className="event-info-text">Genre: Techno / Electronic</p>
                       </div>
                       <div className="event-info-item">
-                        <div className="event-info-icon">👥</div>
-                        <p className="event-info-text">Capacity: 500 guests</p>
+                        <div className="event-info-icon">👔</div>
+                        <p className="event-info-text">Dress Code: All Black</p>
+                      </div>
+                      <div className="event-info-item">
+                        <div className="event-info-icon">🎫</div>
+                        <p className="event-info-text">Age: 21+</p>
+                      </div>
+                      <div className="event-info-item">
+                        <div className="event-info-icon">🍻</div>
+                        <p className="event-info-text">Bar: Full Service</p>
+                      </div>
+                      <div className="event-info-item">
+                        <div className="event-info-icon">🚗</div>
+                        <p className="event-info-text">Parking: Limited</p>
                       </div>
                     </div>
                     
@@ -120,6 +136,34 @@ const Dashboard = ({ onLogout }) => {
                       <div className="event-stat">
                         <p className="event-stat-number">2.4%</p>
                         <p className="event-stat-label">Capacity</p>
+                      </div>
+                    </div>
+                    
+                    <div className="event-sales-info">
+                      <div className="sales-header">
+                        <h4 style={{color: '#ffffff', fontSize: '18px', fontWeight: '600', margin: '0 0 12px 0', textAlign: 'center'}}>
+                          💰 Sales Summary
+                        </h4>
+                      </div>
+                      <div className="sales-stats">
+                        <div className="sales-item">
+                          <span style={{color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px'}}>Total Revenue:</span>
+                          <span style={{color: '#ffffff', fontSize: '20px', fontWeight: '700', marginLeft: '8px'}}>
+                            47,500 kr
+                          </span>
+                        </div>
+                        <div className="sales-item">
+                          <span style={{color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px'}}>Tickets Sold:</span>
+                          <span style={{color: '#ffffff', fontSize: '20px', fontWeight: '700', marginLeft: '8px'}}>
+                            95 tickets
+                          </span>
+                        </div>
+                        <div className="sales-item">
+                          <span style={{color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px'}}>Avg. Price:</span>
+                          <span style={{color: '#ffffff', fontSize: '20px', fontWeight: '700', marginLeft: '8px'}}>
+                            500 kr
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
