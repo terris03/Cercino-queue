@@ -42,7 +42,7 @@ const Dashboard = ({ onLogout }) => {
               <div className="discipline-section">
                 <div className="discipline-artwork">
                   <div className="artwork-content">
-                <div className="upload-card">
+                <div className={`upload-card ${uploadedImage ? 'has-image' : ''}`}>
                   <input 
                     type="file" 
                     accept="image/*" 
