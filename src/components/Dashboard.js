@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 const Dashboard = ({ onLogout }) => {
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('');
   const [isCardExpanded, setIsCardExpanded] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [events, setEvents] = useState([
@@ -27,6 +25,15 @@ const Dashboard = ({ onLogout }) => {
     }
   ]);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  
+  // Handle scroll to update current event index
+  const handleScroll = (e) => {
+    const scrollLeft = e.target.scrollLeft;
+    const containerWidth = e.target.clientWidth;
+    const newIndex = Math.round(scrollLeft / containerWidth);
+    setCurrentEventIndex(newIndex);
+  };
+  
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -41,20 +48,34 @@ const Dashboard = ({ onLogout }) => {
     image: null
   });
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = (e, eventId) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setUploadedImage(event.target.result);
-        console.log('Image uploaded:', event.target.result);
+        // Update the specific event's image
+        setEvents(prevEvents => 
+          prevEvents.map(event => 
+            event.id === eventId 
+              ? { ...event, image: event.target.result }
+              : event
+          )
+        );
+        console.log('Image uploaded for event:', eventId);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
+  const handleDateChange = (e, eventId) => {
+    // Update the specific event's date
+    setEvents(prevEvents => 
+      prevEvents.map(event => 
+        event.id === eventId 
+          ? { ...event, date: e.target.value }
+          : event
+      )
+    );
   };
 
   const formatDate = (dateString) => {
@@ -66,10 +87,9 @@ const Dashboard = ({ onLogout }) => {
     return `${year}/${month}/${day}`;
   };
 
-  const handleCardClick = () => {
-    console.log('Card clicked! Current expanded state:', isCardExpanded);
+  const handleCardClick = (eventId) => {
+    console.log('Card clicked for event:', eventId);
     setIsCardExpanded(!isCardExpanded);
-    console.log('New expanded state:', !isCardExpanded);
   };
 
   const handleCloseEventInfo = (e) => {
@@ -304,7 +324,7 @@ const Dashboard = ({ onLogout }) => {
         {/* Main Content */}
         <main className="cercino-main">
           {/* Horizontal Scrolling Events Container */}
-          <div className="events-horizontal-scroll">
+          <div className="events-horizontal-scroll" onScroll={handleScroll}>
             {events.map((event, index) => (
               <div key={event.id} className={`event-container ${index === currentEventIndex ? 'active' : ''}`}>
                 {/* DISCIPLINE Artwork Section */}
@@ -332,15 +352,15 @@ const Dashboard = ({ onLogout }) => {
                 <div className="discipline-artwork">
                   <div className="artwork-content">
                 <div 
-                  className={`upload-card ${uploadedImage ? 'has-image' : ''} ${isCardExpanded ? 'expanded' : ''}`}
-                  onClick={handleCardClick}
+                  className={`upload-card ${event.image ? 'has-image' : ''} ${isCardExpanded ? 'expanded' : ''}`}
+                  onClick={() => handleCardClick(event.id)}
                 >
                   <input 
                     type="file" 
                     accept="image/*" 
-                    onChange={(e) => handleImageUpload(e)}
+                    onChange={(e) => handleImageUpload(e, event.id)}
                     style={{ display: 'none' }}
-                    id="image-upload"
+                    id={`image-upload-${event.id}`}
                   />
                   
                   {/* Event Information Content */}
@@ -432,34 +452,34 @@ const Dashboard = ({ onLogout }) => {
                     </div>
                   </div>
                   
-                  {uploadedImage ? (
+                  {event.image ? (
                     <div className="uploaded-image-container">
                       <img 
-                        src={uploadedImage} 
+                        src={event.image} 
                         alt="Uploaded artwork" 
                         className="uploaded-image"
                       />
-                      <label htmlFor="image-upload" className="change-image-button">
+                      <label htmlFor={`image-upload-${event.id}`} className="change-image-button">
                         Change Image
                       </label>
                       <div className="date-overlay" onClick={(e) => {
                         e.stopPropagation();
-                        document.getElementById('date-picker').showPicker();
+                        document.getElementById(`date-picker-${event.id}`).showPicker();
                       }}>
                         <input
                           type="date"
-                          id="date-picker"
-                          value={selectedDate}
-                          onChange={handleDateChange}
+                          id={`date-picker-${event.id}`}
+                          value={event.date}
+                          onChange={(e) => handleDateChange(e, event.id)}
                           className="date-input"
                         />
                         <div className="date-display">
-                          {formatDate(selectedDate)}
+                          {formatDate(event.date)}
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <label htmlFor="image-upload" className="upload-button">
+                    <label htmlFor={`image-upload-${event.id}`} className="upload-button">
                       <div className="upload-plus">+</div>
                     </label>
                   )}

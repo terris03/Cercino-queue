@@ -1036,10 +1036,16 @@ body {
   flex-direction: column;
   opacity: 0.3;
   transition: opacity 0.3s ease;
+  position: relative;
 }
 
 .event-container.active {
   opacity: 1;
+}
+
+.event-container:not(.active) {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .upload-card:hover {
