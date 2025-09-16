@@ -143,6 +143,21 @@ const Dashboard = ({ onLogout }) => {
     }
   };
 
+  const handleResetToTutorial = () => {
+    setEvents([]);
+    setCurrentEventIndex(0);
+    setIsCardExpanded(false);
+  };
+
+  const handleDeleteEvent = (eventId) => {
+    const newEvents = events.filter(event => event.id !== eventId);
+    setEvents(newEvents);
+    if (currentEventIndex >= newEvents.length) {
+      setCurrentEventIndex(Math.max(0, newEvents.length - 1));
+    }
+    setIsCardExpanded(false);
+  };
+
   return (
     <div className="cercino-app-screen">
       <div className="cercino-container">
@@ -301,8 +316,29 @@ const Dashboard = ({ onLogout }) => {
           </div>
         )}
 
+        {/* Top Navigation - Show when there are events */}
+        {events.length > 0 && (
+          <div className="top-navigation">
+            <div className="nav-left">
+              <button className="nav-reset-btn" onClick={handleResetToTutorial}>
+                <i className="fas fa-home"></i>
+                Reset to Tutorial
+              </button>
+            </div>
+            <div className="nav-center">
+              <span className="nav-title">Cercino Events</span>
+            </div>
+            <div className="nav-right">
+              <button className="nav-create-btn" onClick={handleCreateEvent}>
+                <i className="fas fa-plus"></i>
+                New Event
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Main Content */}
-        <main className="cercino-main">
+        <main className={`cercino-main ${events.length > 0 ? 'has-navigation' : ''}`}>
           {/* Tutorial State - Show when no events */}
           {events.length === 0 ? (
             <div className="tutorial-state">
@@ -336,6 +372,9 @@ const Dashboard = ({ onLogout }) => {
                   <i className="fas fa-plus"></i>
                   Create Your First Event
                 </button>
+                <div className="tutorial-info">
+                  <p>You can always reset to this tutorial by clicking the reset button in the top navigation.</p>
+                </div>
               </div>
             </div>
           ) : (
@@ -383,9 +422,19 @@ const Dashboard = ({ onLogout }) => {
                   <div className="event-info-content">
                     <div className="event-info-header">
                       <h3 className="event-info-title">{event.title}</h3>
-                      <button className="event-info-close" onClick={handleCloseEventInfo}>
-                        ×
-                      </button>
+                      <div className="event-header-actions">
+                        <button className="event-delete-btn" onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm('Are you sure you want to delete this event?')) {
+                            handleDeleteEvent(event.id);
+                          }
+                        }}>
+                          <i className="fas fa-trash"></i>
+                        </button>
+                        <button className="event-info-close" onClick={handleCloseEventInfo}>
+                          ×
+                        </button>
+                      </div>
                     </div>
                     
                     
