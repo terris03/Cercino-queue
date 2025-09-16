@@ -32,12 +32,12 @@ const Dashboard = ({ onLogout }) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = (fileEvent) => {
         // Update the specific event's image
         setEvents(prevEvents => 
           prevEvents.map(event => 
             event.id === eventId 
-              ? { ...event, image: event.target.result }
+              ? { ...event, image: fileEvent.target.result }
               : event
           )
         );
