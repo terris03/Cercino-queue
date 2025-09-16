@@ -200,17 +200,24 @@ code {
   animation-delay: 0.4s;
 }
 
-/* Action Buttons */
-.action-buttons {
-  display: flex;
+/* 2x2 Grid Layout */
+.modules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 20px;
   margin: 0 20px 30px 20px;
-  justify-content: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: contents;
 }
 
 .btn {
-  flex: 1;
-  max-width: 48%;
   padding: 18px 25px;
   border: none;
   border-radius: 12px;
@@ -222,6 +229,7 @@ code {
   align-items: center;
   justify-content: center;
   gap: 12px;
+  width: 100%;
 }
 
 .btn-primary {
@@ -248,19 +256,15 @@ code {
 
 /* Stats Section */
 .stats-section {
-  display: flex;
-  gap: 20px;
-  margin: 0 20px 30px 20px;
-  justify-content: center;
+  display: contents;
 }
 
 .stats-item {
-  flex: 1;
-  max-width: 48%;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 18px 25px;
   text-align: center;
+  width: 100%;
 }
 
 .stats-label {
@@ -563,22 +567,9 @@ code {
     padding: 15px;
   }
   
-  .action-buttons {
+  .modules-grid {
     margin: 0 15px 30px 15px;
     gap: 15px;
-  }
-  
-  .btn {
-    max-width: 48%;
-  }
-  
-  .stats-section {
-    margin: 0 15px 30px 15px;
-    gap: 15px;
-  }
-  
-  .stats-item {
-    max-width: 48%;
   }
 }
 
@@ -595,7 +586,11 @@ code {
   .btn {
     padding: 15px 20px;
     font-size: 14px;
-    max-width: 48%;
+  }
+  
+  .modules-grid {
+    margin: 0 15px 30px 15px;
+    gap: 15px;
   }
   
   .stats-item {

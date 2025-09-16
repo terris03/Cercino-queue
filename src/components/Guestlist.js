@@ -193,27 +193,34 @@ const Guestlist = () => {
 
       {/* Main Content */}
       <main className="main-content">
-        {/* Import/Export Buttons */}
-        <div className="action-buttons fade-in">
-          <button className="btn btn-primary" onClick={handleImportCSV}>
-            <i className="fas fa-upload"></i>
-            Import CSV
-          </button>
-          <button className="btn btn-secondary" onClick={handleExportCSV}>
-            <i className="fas fa-download"></i>
-            Export CSV
-          </button>
-        </div>
-
-        {/* Check-in Statistics */}
-        <div className="stats-section fade-in fade-in-delay-1">
-          <div className="stats-item">
-            <span className="stats-label">Checked in:</span>
-            <span className="stats-count">{checkedInCount}</span>
+        {/* 2x2 Grid Layout */}
+        <div className="modules-grid fade-in">
+          {/* Top Row - Action Buttons */}
+          <div className="action-buttons">
+            <button className="btn btn-primary" onClick={handleImportCSV}>
+              <i className="fas fa-upload"></i>
+              Import CSV
+            </button>
           </div>
-          <div className="stats-item">
-            <span className="stats-label">Non-checked:</span>
-            <span className="stats-count">{nonCheckedCount}</span>
+          <div className="action-buttons">
+            <button className="btn btn-secondary" onClick={handleExportCSV}>
+              <i className="fas fa-download"></i>
+              Export CSV
+            </button>
+          </div>
+          
+          {/* Bottom Row - Statistics */}
+          <div className="stats-section">
+            <div className="stats-item">
+              <span className="stats-label">Checked in:</span>
+              <span className="stats-count">{checkedInCount}</span>
+            </div>
+          </div>
+          <div className="stats-section">
+            <div className="stats-item">
+              <span className="stats-label">Non-checked:</span>
+              <span className="stats-count">{nonCheckedCount}</span>
+            </div>
           </div>
         </div>
 
