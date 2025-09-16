@@ -25,11 +25,12 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content */}
         <main className="event-main">
-          {/* Horizontal Event Scroller */}
-          <div className="events-scroller">
-            <div className="scroller-container">
-              <div className="event-card-large">
-                <div className="event-card-image-large">
+          {/* Spotify-like Event Scroller */}
+          <div className="spotify-scroller">
+            <div className="spotify-container">
+              {/* Tutorial Event Card */}
+              <div className="spotify-event-card active">
+                <div className="event-image-spotify">
                   <div className="retro-artwork">
                     <div className="afro-woman">👩🏿‍🦱</div>
                     <div className="abstract-shapes">
@@ -39,92 +40,46 @@ const Dashboard = ({ onLogout }) => {
                     </div>
                   </div>
                 </div>
-                <div className="event-card-content-large">
-                  <h4 className="event-card-title-large">Young Pulse</h4>
-                  <div className="event-card-info-large">
-                    <span className="event-card-time-large">Tonight | 10:00 PM</span>
-                    <span className="event-card-venue-large">Club XYZ</span>
+                <div className="event-content-spotify">
+                  <h3 className="event-title-spotify">Tutorial</h3>
+                  <p className="event-subtitle-spotify">Learn how to use the app</p>
+                </div>
+                
+                {/* Guest List */}
+                <div className="guest-list">
+                  <div className="guest-item">
+                    <span className="guest-name">Emma Andersson</span>
+                    <span className="guest-price">250 kr</span>
+                  </div>
+                  <div className="guest-item">
+                    <span className="guest-name">Marcus Johansson</span>
+                    <span className="guest-price">300 kr</span>
+                  </div>
+                  <div className="guest-item">
+                    <span className="guest-name">Sofia Eriksson</span>
+                    <span className="guest-price">200 kr</span>
+                  </div>
+                  <div className="guest-item">
+                    <span className="guest-name">Alexander Nilsson</span>
+                    <span className="guest-price">350 kr</span>
+                  </div>
+                  <div className="guest-item">
+                    <span className="guest-name">Isabella Larsson</span>
+                    <span className="guest-price">275 kr</span>
+                  </div>
+                  <div className="guest-item">
+                    <span className="guest-name">Erik Gustafsson</span>
+                    <span className="guest-price">225 kr</span>
                   </div>
                 </div>
               </div>
 
-              <div className="event-card-large">
-                <div className="event-card-image-large">
-                  <div className="retro-artwork">
-                    <div className="afro-woman">👩🏿‍🦱</div>
-                    <div className="abstract-shapes">
-                      <div className="shape shape-1"></div>
-                      <div className="shape shape-2"></div>
-                      <div className="shape shape-3"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="event-card-content-large">
-                  <h4 className="event-card-title-large">Summer Vibes</h4>
-                  <div className="event-card-info-large">
-                    <span className="event-card-time-large">Tonight | 11:00 PM</span>
-                    <span className="event-card-venue-large">Beach Club</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="event-card-large">
-                <div className="event-card-image-large">
-                  <div className="retro-artwork">
-                    <div className="afro-woman">👩🏿‍🦱</div>
-                    <div className="abstract-shapes">
-                      <div className="shape shape-1"></div>
-                      <div className="shape shape-2"></div>
-                      <div className="shape shape-3"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="event-card-content-large">
-                  <h4 className="event-card-title-large">Night Fever</h4>
-                  <div className="event-card-info-large">
-                    <span className="event-card-time-large">Tomorrow | 9:00 PM</span>
-                    <span className="event-card-venue-large">Studio 54</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="event-card-large">
-                <div className="event-card-image-large">
-                  <div className="retro-artwork">
-                    <div className="afro-woman">👩🏿‍🦱</div>
-                    <div className="abstract-shapes">
-                      <div className="shape shape-1"></div>
-                      <div className="shape shape-2"></div>
-                      <div className="shape shape-3"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="event-card-content-large">
-                  <h4 className="event-card-title-large">Electric Dreams</h4>
-                  <div className="event-card-info-large">
-                    <span className="event-card-time-large">Friday | 8:00 PM</span>
-                    <span className="event-card-venue-large">Warehouse</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="event-card-large">
-                <div className="event-card-image-large">
-                  <div className="retro-artwork">
-                    <div className="afro-woman">👩🏿‍🦱</div>
-                    <div className="abstract-shapes">
-                      <div className="shape shape-1"></div>
-                      <div className="shape shape-2"></div>
-                      <div className="shape shape-3"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="event-card-content-large">
-                  <h4 className="event-card-title-large">Urban Beat</h4>
-                  <div className="event-card-info-large">
-                    <span className="event-card-time-large">Saturday | 7:00 PM</span>
-                    <span className="event-card-venue-large">Rooftop</span>
-                  </div>
+              {/* Add New Event Card */}
+              <div className="spotify-event-card add-event">
+                <div className="add-event-content">
+                  <div className="add-event-icon">+</div>
+                  <h3 className="add-event-title">Add Event</h3>
+                  <p className="add-event-subtitle">Create new event</p>
                 </div>
               </div>
             </div>
