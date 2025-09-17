@@ -22,7 +22,8 @@ const StatisticsScreen = ({ onLogout, onNavigate, guests = [] }) => {
       </div>
 
       <div className="stats-container">
-        <div className="stats-grid">
+        {/* Row 1: Total Earnings + Total Guests */}
+        <div className="stats-row">
           <div className="stat-card">
             <div className="stat-icon green">
               <i className="fas fa-dollar-sign"></i>
@@ -42,7 +43,10 @@ const StatisticsScreen = ({ onLogout, onNavigate, guests = [] }) => {
               <p className="stat-number">{totalGuests}</p>
             </div>
           </div>
+        </div>
 
+        {/* Row 2: Checked In + Avg Order */}
+        <div className="stats-row">
           <div className="stat-card">
             <div className="stat-icon teal">
               <i className="fas fa-check-circle"></i>
@@ -64,65 +68,71 @@ const StatisticsScreen = ({ onLogout, onNavigate, guests = [] }) => {
           </div>
         </div>
 
-        <div className="chart-section">
-          <div className="chart-header">
-            <div className="chart-icon orange">
-              <i className="fas fa-chart-line"></i>
-            </div>
-            <div className="chart-content">
-              <h2>Check-in Rate</h2>
-              <div className="progress-info">
-                <span className="progress-label">Progress</span>
-                <span className="progress-percentage">{checkInRate}%</span>
+        {/* Row 3: Check-in Rate (Full Width) */}
+        <div className="stats-full-width">
+          <div className="chart-section">
+            <div className="chart-header">
+              <div className="chart-icon orange">
+                <i className="fas fa-chart-line"></i>
+              </div>
+              <div className="chart-content">
+                <h2>Check-in Rate</h2>
+                <div className="progress-info">
+                  <span className="progress-label">Progress</span>
+                  <span className="progress-percentage">{checkInRate}%</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${checkInRate}%` }}
-            ></div>
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${checkInRate}%` }}
+              ></div>
+            </div>
           </div>
         </div>
 
-        <div className="fluid-diagram-section">
-          <h2>Guest Flow</h2>
-          <div className="fluid-container">
-            <div className="fluid-box total">
-              <div className="fluid-icon">
-                <i className="fas fa-users"></i>
+        {/* Row 4: Guest Flow (Full Width) */}
+        <div className="stats-full-width">
+          <div className="fluid-diagram-section">
+            <h2>Guest Flow</h2>
+            <div className="fluid-container">
+              <div className="fluid-box total">
+                <div className="fluid-icon">
+                  <i className="fas fa-users"></i>
+                </div>
+                <div className="fluid-content">
+                  <span className="fluid-number">{totalGuests}</span>
+                  <span className="fluid-label">Total Guests</span>
+                </div>
               </div>
-              <div className="fluid-content">
-                <span className="fluid-number">{totalGuests}</span>
-                <span className="fluid-label">Total Guests</span>
+              
+              <div className="fluid-arrow">
+                <i className="fas fa-arrow-right"></i>
               </div>
-            </div>
-            
-            <div className="fluid-arrow">
-              <i className="fas fa-arrow-right"></i>
-            </div>
-            
-            <div className="fluid-box checked">
-              <div className="fluid-icon">
-                <i className="fas fa-check-circle"></i>
+              
+              <div className="fluid-box checked">
+                <div className="fluid-icon">
+                  <i className="fas fa-check-circle"></i>
+                </div>
+                <div className="fluid-content">
+                  <span className="fluid-number">{checkedIn}</span>
+                  <span className="fluid-label">Checked In</span>
+                </div>
               </div>
-              <div className="fluid-content">
-                <span className="fluid-number">{checkedIn}</span>
-                <span className="fluid-label">Checked In</span>
+              
+              <div className="fluid-arrow">
+                <i className="fas fa-arrow-right"></i>
               </div>
-            </div>
-            
-            <div className="fluid-arrow">
-              <i className="fas fa-arrow-right"></i>
-            </div>
-            
-            <div className="fluid-box remaining">
-              <div className="fluid-icon">
-                <i className="fas fa-clock"></i>
-              </div>
-              <div className="fluid-content">
-                <span className="fluid-number">{remaining}</span>
-                <span className="fluid-label">Remaining</span>
+              
+              <div className="fluid-box remaining">
+                <div className="fluid-icon">
+                  <i className="fas fa-clock"></i>
+                </div>
+                <div className="fluid-content">
+                  <span className="fluid-number">{remaining}</span>
+                  <span className="fluid-label">Remaining</span>
+                </div>
               </div>
             </div>
           </div>

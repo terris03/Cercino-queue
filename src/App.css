@@ -767,11 +767,32 @@ code {
   width: 100%;
 }
 
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stats-full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: 1fr 1fr !important;
     gap: 8px;
     margin-bottom: 15px;
+  }
+  
+  .stats-row {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .stats-full-width {
+    margin-bottom: 8px;
   }
 }
 
