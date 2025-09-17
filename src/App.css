@@ -14,7 +14,9 @@ body {
   color: #ffffff;
   overflow-x: hidden;
   max-width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
+  position: fixed;
+  width: 100%;
 }
 
 code {
@@ -353,7 +355,11 @@ code {
   flex-direction: column;
   background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .guestlist-header {
@@ -1054,14 +1060,14 @@ code {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  background: #000000;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  padding: 12px 0;
+  padding: 16px 20px;
   z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 20px 20px 0 0;
+  margin: 0 10px 10px 10px;
+  width: calc(100% - 20px);
 }
 
 .nav-item {
@@ -1070,15 +1076,11 @@ code {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 8px;
+  padding: 12px 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 12px;
   margin: 0 4px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-item:hover {
@@ -1088,9 +1090,8 @@ code {
 }
 
 .nav-item.active {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
 }
 
 .nav-item i {
