@@ -308,9 +308,9 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
 
   return (
     <div className="guestlist-screen">
-      {/* Fixed Header */}
-      <div className="guestlist-header">
-        <div className="header-left">
+      {/* Integrated Header & Controls */}
+      <div className="guestlist-header-integrated">
+        <div className="header-section">
           <h1 className="event-title">CERCINO x PartyHBG</h1>
           <div className="checkin-stats">
             <span className="checked-in">Checked In</span>
@@ -322,34 +322,33 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
             <span className="remaining-count">{remainingGuests}</span>
           </div>
         </div>
-      </div>
-
-      {/* Fixed Controls */}
-      <div className="guestlist-controls">
-        <div className="search-section">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search guests..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button className="filter-btn">
-            <i className="fas fa-filter"></i>
-            <span>{filter}</span>
-            <i className="fas fa-chevron-down"></i>
-          </button>
-        </div>
         
-        <div className="action-buttons">
-          <button className="add-guest-btn" onClick={handleAddGuest}>
-            <i className="fas fa-plus"></i>
-            Add / Edit Guest
-          </button>
-          <button className="import-csv-btn" onClick={handleCSVImport} disabled={importing}>
-            <i className={`fas ${importing ? 'fa-spinner fa-spin' : 'fa-upload'}`}></i>
-            {importing ? 'Importing...' : 'Import CSV'}
-          </button>
+        <div className="controls-section">
+          <div className="search-section">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search guests..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button className="filter-btn">
+              <i className="fas fa-filter"></i>
+              <span>{filter}</span>
+              <i className="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          
+          <div className="action-buttons">
+            <button className="add-guest-btn" onClick={handleAddGuest}>
+              <i className="fas fa-plus"></i>
+              Add / Edit Guest
+            </button>
+            <button className="import-csv-btn" onClick={handleCSVImport} disabled={importing}>
+              <i className={`fas ${importing ? 'fa-spinner fa-spin' : 'fa-upload'}`}></i>
+              {importing ? 'Importing...' : 'Import CSV'}
+            </button>
+          </div>
         </div>
       </div>
 
