@@ -627,9 +627,7 @@ code {
 .menu-header {
   padding: 20px;
   border-bottom: 1px solid #333;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
 }
 
 .menu-header h2 {
@@ -637,15 +635,6 @@ code {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-}
-
-.close-menu {
-  background: none;
-  border: none;
-  color: #ffffff;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 5px;
 }
 
 .menu-content {
@@ -768,9 +757,15 @@ code {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .stat-card {

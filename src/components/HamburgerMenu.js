@@ -33,9 +33,6 @@ const HamburgerMenu = ({ onNavigate, currentScreen, onLogout }) => {
       <div className={`slide-menu ${isOpen ? 'open' : ''}`}>
         <div className="menu-header">
           <h2>CERCINO</h2>
-          <button className="close-menu" onClick={toggleMenu}>
-            <i className="fas fa-times"></i>
-          </button>
         </div>
 
         <div className="menu-content">
