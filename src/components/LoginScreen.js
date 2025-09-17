@@ -25,15 +25,13 @@ const LoginScreen = ({ onLogin }) => {
       {/* Bottom Section - Login Form */}
       <div className="hotel-form-section">
         <div className="hotel-welcome-text">
-          <h2 className="hotel-subtitle">Welcome to Cercino</h2>
-          <h1 className="hotel-title">Your Wish is Our Command</h1>
-          <p style={{color: '#e55a8a', fontSize: '12px', marginTop: '10px'}}>✨ LOGIN FIXED ✨</p>
+          <h1 className="hotel-title">CERCINO</h1>
         </div>
 
         <form className="hotel-login-form" onSubmit={handleSubmit}>
           <div className="hotel-input-group">
             <input
-              type="text"
+              type="password"
               className="hotel-room-input"
               placeholder="Room Number"
               value={roomNumber}
