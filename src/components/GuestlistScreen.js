@@ -143,19 +143,17 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
       {/* Scrollable Guest List */}
       <div className="guest-list">
         {filteredGuests.map(guest => (
-          <div key={guest.id} className="guest-item">
+          <div 
+            key={guest.id} 
+            className="guest-item"
+            onDoubleClick={() => handleEditGuest(guest)}
+            title="Double-click to edit guest"
+          >
             <div className="guest-info">
               <span className="guest-name">{guest.name}</span>
               <span className="guest-price">{guest.price}</span>
             </div>
             <div className="guest-actions">
-              <button 
-                className="edit-btn"
-                onClick={() => handleEditGuest(guest)}
-                title="Edit Guest"
-              >
-                <i className="fas fa-edit"></i>
-              </button>
               <button 
                 className="delete-btn"
                 onClick={() => handleDeleteGuest(guest.id)}
@@ -197,9 +195,25 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{editingGuest ? 'Edit Guest' : 'Add New Guest'}</h3>
-              <button className="close-btn" onClick={handleCloseModal}>
-                <i className="fas fa-times"></i>
-              </button>
+              <div className="modal-header-actions">
+                {editingGuest && (
+                  <button 
+                    className="delete-guest-btn"
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this guest?')) {
+                        handleDeleteGuest(editingGuest.id);
+                        handleCloseModal();
+                      }
+                    }}
+                    title="Delete Guest"
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
+                )}
+                <button className="close-btn" onClick={handleCloseModal}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
             </div>
             <div className="modal-body">
               <div className="form-group">
