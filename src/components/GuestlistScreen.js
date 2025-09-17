@@ -625,16 +625,6 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       </div>
 
       {/* Fixed Bottom Navigation */}
-      <div className="bottom-navigation">
-        <div className="nav-item active" onClick={() => onNavigate('guestlist')}>
-          <i className="fas fa-users"></i>
-          <span>Guests</span>
-        </div>
-        <div className="nav-item" onClick={() => onNavigate('profile')}>
-          <i className="fas fa-user"></i>
-          <span>Profile</span>
-        </div>
-      </div>
 
       {/* Guest Modal */}
       {showGuestModal && (

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import LoginScreen from './components/LoginScreen';
 import GuestlistScreen from './components/GuestlistScreen';
+import StatisticsScreen from './components/StatisticsScreen';
 import ProfileScreen from './components/ProfileScreen';
+import HamburgerMenu from './components/HamburgerMenu';
 import './App.css';
 
 function App() {
@@ -44,6 +46,14 @@ function App() {
             </div>
           </div>
         );
+      case 'statistics':
+        return (
+          <div className="screen active">
+            <div className="screen-content">
+              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+            </div>
+          </div>
+        );
       case 'profile':
         return (
           <div className="screen active">
@@ -61,6 +71,13 @@ function App() {
     <div className="App">
       <div className="screen-container">
         {renderScreen()}
+        {isLoggedIn && (
+          <HamburgerMenu 
+            onNavigate={handleNavigation} 
+            currentScreen={currentScreen}
+            onLogout={handleLogout}
+          />
+        )}
       </div>
     </div>
   );
