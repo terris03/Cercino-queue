@@ -4,15 +4,15 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter] = useState('All');
   
-  // Sample guest data with state management
+  // Sample guest data with state management - all start unchecked
   const [guests, setGuests] = useState([
     { id: 1, name: 'Melvin Edström', price: '100 kr', checkedIn: false },
     { id: 2, name: 'Vilma Lundin', price: '100 kr', checkedIn: false },
     { id: 3, name: 'Julia Rådenfjord', price: '100 kr', checkedIn: false },
     { id: 4, name: 'Elin Karlsson', price: '100 kr', checkedIn: false },
-    { id: 5, name: 'Anna Svensson', price: '150 kr', checkedIn: true },
+    { id: 5, name: 'Anna Svensson', price: '150 kr', checkedIn: false },
     { id: 6, name: 'Erik Johansson', price: '100 kr', checkedIn: false },
-    { id: 7, name: 'Maria Andersson', price: '200 kr', checkedIn: true },
+    { id: 7, name: 'Maria Andersson', price: '200 kr', checkedIn: false },
     { id: 8, name: 'Lars Nilsson', price: '100 kr', checkedIn: false },
   ]);
 
@@ -21,6 +21,7 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
   const remainingGuests = totalGuests - checkedInCount;
 
   const handleCheckIn = (guestId) => {
+    console.log('Checking in guest:', guestId);
     setGuests(prevGuests => 
       prevGuests.map(guest => 
         guest.id === guestId 
@@ -92,7 +93,6 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
             <button 
               className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
               onClick={() => handleCheckIn(guest.id)}
-              disabled={guest.checkedIn}
             >
               <i className="fas fa-check"></i>
               {guest.checkedIn ? 'Checked' : 'Check In'}
