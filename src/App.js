@@ -8,8 +8,10 @@ import './App.css';
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [roomCode, setRoomCode] = useState('123');
 
-  const handleLogin = () => {
+  const handleLogin = (code) => {
+    setRoomCode(code);
     setIsLoggedIn(true);
     setCurrentScreen('guestlist');
   };
@@ -39,7 +41,7 @@ function App() {
         return (
           <div className="screen active">
             <div className="screen-content">
-              <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+              <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
             </div>
           </div>
         );

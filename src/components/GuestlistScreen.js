@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy } from 'firebase/firestore';
+import { db } from '../firebase';
 
-const GuestlistScreen = ({ onLogout, onNavigate }) => {
+const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter] = useState('All');
   const [showGuestModal, setShowGuestModal] = useState(false);
@@ -8,32 +10,44 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
   const [guestForm, setGuestForm] = useState({ name: '', price: '' });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  
-  // Sample guest data with state management - all start unchecked
-  const [guests, setGuests] = useState([
-    { id: 1, name: 'Melvin Edström', price: '100 kr', checkedIn: false },
-    { id: 2, name: 'Vilma Lundin', price: '100 kr', checkedIn: false },
-    { id: 3, name: 'Julia Rådenfjord', price: '100 kr', checkedIn: false },
-    { id: 4, name: 'Elin Karlsson', price: '100 kr', checkedIn: false },
-    { id: 5, name: 'Anna Svensson', price: '150 kr', checkedIn: false },
-    { id: 6, name: 'Erik Johansson', price: '100 kr', checkedIn: false },
-    { id: 7, name: 'Maria Andersson', price: '200 kr', checkedIn: false },
-    { id: 8, name: 'Lars Nilsson', price: '100 kr', checkedIn: false },
-  ]);
+  const [guests, setGuests] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Set up real-time listener for guests
+  useEffect(() => {
+    const guestsRef = collection(db, 'guests');
+    const q = query(guestsRef, where('roomCode', '==', roomCode), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const guestsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setGuests(guestsData);
+      setLoading(false);
+    }, (error) => {
+      console.error('Error fetching guests:', error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [roomCode]);
 
   const totalGuests = guests.length;
   const checkedInCount = guests.filter(guest => guest.checkedIn).length;
   const remainingGuests = totalGuests - checkedInCount;
 
-  const handleCheckIn = (guestId) => {
-    console.log('Checking in guest:', guestId);
-    setGuests(prevGuests => 
-      prevGuests.map(guest => 
-        guest.id === guestId 
-          ? { ...guest, checkedIn: !guest.checkedIn }
-          : guest
-      )
-    );
+  const handleCheckIn = async (guestId) => {
+    try {
+      const guestRef = doc(db, 'guests', guestId);
+      const guest = guests.find(g => g.id === guestId);
+      await updateDoc(guestRef, {
+        checkedIn: !guest.checkedIn,
+        lastUpdated: new Date()
+      });
+    } catch (error) {
+      console.error('Error updating guest:', error);
+    }
   };
 
   const handleAddGuest = () => {
@@ -48,40 +62,50 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
     setShowGuestModal(true);
   };
 
-  const handleSaveGuest = () => {
+  const handleSaveGuest = async () => {
     if (!guestForm.name.trim() || !guestForm.price.trim()) {
       alert('Please fill in all fields');
       return;
     }
 
-    if (editingGuest) {
-      // Edit existing guest
-      setGuests(prevGuests =>
-        prevGuests.map(guest =>
-          guest.id === editingGuest.id
-            ? { ...guest, name: guestForm.name, price: guestForm.price }
-            : guest
-        )
-      );
-    } else {
-      // Add new guest
-      const newGuest = {
-        id: Date.now(), // Simple ID generation
-        name: guestForm.name,
-        price: guestForm.price,
-        checkedIn: false
-      };
-      setGuests(prevGuests => [...prevGuests, newGuest]);
-    }
+    try {
+      if (editingGuest) {
+        // Edit existing guest
+        const guestRef = doc(db, 'guests', editingGuest.id);
+        await updateDoc(guestRef, {
+          name: guestForm.name,
+          price: guestForm.price,
+          lastUpdated: new Date()
+        });
+      } else {
+        // Add new guest
+        await addDoc(collection(db, 'guests'), {
+          name: guestForm.name,
+          price: guestForm.price,
+          checkedIn: false,
+          roomCode: roomCode,
+          createdAt: new Date(),
+          lastUpdated: new Date()
+        });
+      }
 
-    setShowGuestModal(false);
-    setEditingGuest(null);
-    setGuestForm({ name: '', price: '' });
+      setShowGuestModal(false);
+      setEditingGuest(null);
+      setGuestForm({ name: '', price: '' });
+    } catch (error) {
+      console.error('Error saving guest:', error);
+      alert('Error saving guest. Please try again.');
+    }
   };
 
-  const handleDeleteGuest = (guestId) => {
+  const handleDeleteGuest = async (guestId) => {
     if (window.confirm('Are you sure you want to delete this guest?')) {
-      setGuests(prevGuests => prevGuests.filter(guest => guest.id !== guestId));
+      try {
+        await deleteDoc(doc(db, 'guests', guestId));
+      } catch (error) {
+        console.error('Error deleting guest:', error);
+        alert('Error deleting guest. Please try again.');
+      }
     }
   };
 
@@ -174,7 +198,19 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
 
       {/* Scrollable Guest List */}
       <div className="guest-list">
-        {filteredGuests.map(guest => (
+        {loading ? (
+          <div className="loading-indicator">
+            <i className="fas fa-spinner fa-spin"></i>
+            <span>Loading guests...</span>
+          </div>
+        ) : filteredGuests.length === 0 ? (
+          <div className="empty-state">
+            <i className="fas fa-users"></i>
+            <span>No guests found</span>
+            <p>Add guests using the "Add / Edit Guest" button above</p>
+          </div>
+        ) : (
+          filteredGuests.map(guest => (
           <div 
             key={guest.id} 
             className="guest-item"
@@ -202,7 +238,8 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
               </button>
             </div>
           </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Fixed Bottom Navigation */}

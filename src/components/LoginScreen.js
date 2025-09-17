@@ -11,7 +11,7 @@ const LoginScreen = ({ onLogin }) => {
     e.preventDefault();
     // Simple validation - in real app, this would connect to authentication
     if (roomNumber.trim()) {
-      onLogin();
+      onLogin(roomNumber.trim());
     }
   };
 
