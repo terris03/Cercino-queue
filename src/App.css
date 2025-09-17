@@ -261,16 +261,16 @@ code {
 
 .hotel-form-section {
   background: #000000;
-  padding: 15px 30px 20px 30px;
+  padding: 15px 30px 30px 30px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   position: absolute;
-  bottom: 100px;
+  bottom: 120px;
   left: 0;
   right: 0;
   height: auto;
-  min-height: 200px;
+  min-height: 220px;
 }
 
 .hotel-welcome-text {
@@ -1368,10 +1368,10 @@ code {
   }
   
   .hotel-form-section {
-    padding: 8px 20px 12px 20px;
+    padding: 8px 20px 20px 20px;
     gap: 10px;
-    bottom: 80px;
-    min-height: 180px;
+    bottom: 100px;
+    min-height: 200px;
   }
   
   .hotel-image-section {
