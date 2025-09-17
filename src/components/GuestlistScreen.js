@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from '../firebase';
+import { loadGuests } from '../utils/localStorage';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +18,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
 
   // Load guests from Firebase with real-time updates
   useEffect(() => {
+    console.log('Setting up Firebase listener for roomCode:', roomCode);
     const guestsRef = collection(db, 'guests');
     const q = query(guestsRef, where('roomCode', '==', roomCode), orderBy('createdAt', 'desc'));
     
@@ -25,11 +27,26 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       snapshot.forEach((doc) => {
         guestsData.push({ id: doc.id, ...doc.data() });
       });
-      console.log('Loaded guests from Firebase:', guestsData.length);
+      console.log('Firebase snapshot received:', {
+        roomCode: roomCode,
+        guestsCount: guestsData.length,
+        guests: guestsData.slice(0, 3) // First 3 guests for debugging
+      });
       setGuests(guestsData);
       setLoading(false);
     }, (error) => {
-      console.error('Error loading guests:', error);
+      console.error('Firebase error loading guests:', error);
+      console.error('Error details:', {
+        code: error.code,
+        message: error.message,
+        roomCode: roomCode
+      });
+      
+      // Fallback to localStorage if Firebase fails
+      console.log('Falling back to localStorage...');
+      const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
+      console.log('Loaded from localStorage:', localGuests.length, 'guests');
+      setGuests(localGuests);
       setLoading(false);
     });
 

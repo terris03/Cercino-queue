@@ -571,11 +571,12 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
+  justify-content: flex-start;
+  padding: 60px 40px 40px 40px;
   color: rgba(255, 255, 255, 0.7);
   gap: 12px;
   text-align: center;
+  margin-top: 40px;
 }
 
 .empty-state i {
