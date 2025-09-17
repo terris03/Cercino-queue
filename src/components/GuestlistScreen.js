@@ -155,28 +155,69 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       const line = lines[i].trim();
       if (!line) continue;
       
-      // Skip header row if it contains "name" or "firstname"
-      if (i === 0 && (line.toLowerCase().includes('name') || line.toLowerCase().includes('firstname'))) {
+      // Skip header row if it contains "name" or "firstname" or "billing"
+      if (i === 0 && (line.toLowerCase().includes('name') || line.toLowerCase().includes('firstname') || line.toLowerCase().includes('billing'))) {
         continue;
       }
       
-      // Split by comma, handle quoted values
-      const values = line.split(',').map(val => val.trim().replace(/^"|"$/g, ''));
+      // Split by comma, handle quoted values properly
+      const values = [];
+      let current = '';
+      let inQuotes = false;
       
-      if (values.length >= 2) {
-        // Handle different CSV formats:
-        // Format 1: "Firstname, Lastname, Price" (3 columns)
-        // Format 2: "Full Name, Price" (2 columns)
-        let name, price;
-        
-        if (values.length >= 3) {
-          // Format 1: Firstname, Lastname, Price
-          name = `${values[0]} ${values[1]}`.trim();
-          price = values[2] || '100 kr';
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          values.push(current.trim());
+          current = '';
         } else {
-          // Format 2: Full Name, Price
-          name = values[0] || `Guest ${i + 1}`;
-          price = values[1] || '100 kr';
+          current += char;
+        }
+      }
+      values.push(current.trim());
+      
+      // Clean up values (remove quotes)
+      const cleanValues = values.map(val => val.replace(/^"|"$/g, ''));
+      
+      if (cleanValues.length >= 3) {
+        // Format: "Firstname, Lastname, Price" (3 columns)
+        const firstName = cleanValues[0] || '';
+        const lastName = cleanValues[1] || '';
+        const priceValue = cleanValues[2] || '100 kr';
+        
+        // Combine first and last name
+        const fullName = `${firstName} ${lastName}`.trim();
+        
+        // Format price (convert decimal to kr format)
+        let formattedPrice = priceValue;
+        if (priceValue.includes('.')) {
+          const numPrice = parseFloat(priceValue);
+          if (!isNaN(numPrice)) {
+            formattedPrice = `${Math.round(numPrice)} kr`;
+          }
+        }
+        
+        guests.push({
+          name: fullName,
+          price: formattedPrice,
+          checkedIn: false,
+          roomCode: roomCode,
+          createdAt: new Date(),
+          lastUpdated: new Date()
+        });
+      } else if (cleanValues.length >= 2) {
+        // Format: "Full Name, Price" (2 columns)
+        const name = cleanValues[0] || `Guest ${i + 1}`;
+        let price = cleanValues[1] || '100 kr';
+        
+        // Format price if it's a decimal
+        if (price.includes('.')) {
+          const numPrice = parseFloat(price);
+          if (!isNaN(numPrice)) {
+            price = `${Math.round(numPrice)} kr`;
+          }
         }
         
         guests.push({
