@@ -762,12 +762,6 @@ code {
   margin-bottom: 40px;
 }
 
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .stat-card {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
