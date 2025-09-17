@@ -30,17 +30,27 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
 
   const handleCheckIn = (guestId) => {
     try {
+      const guest = guests.find(g => g.id === guestId);
+      if (!guest) {
+        console.error('Guest not found:', guestId);
+        return;
+      }
+      
       const updatedGuest = updateGuest(guestId, {
-        checkedIn: !guests.find(g => g.id === guestId).checkedIn
+        checkedIn: !guest.checkedIn
       });
       
       if (updatedGuest) {
         setGuests(prevGuests => 
           prevGuests.map(g => g.id === guestId ? updatedGuest : g)
         );
+        console.log('Guest check-in updated:', updatedGuest.name, updatedGuest.checkedIn);
+      } else {
+        console.error('Failed to update guest:', guestId);
       }
     } catch (error) {
       console.error('Error checking in guest:', error);
+      alert('Error updating guest. Please try again.');
     }
   };
 
@@ -66,25 +76,35 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       if (editingGuest) {
         // Edit existing guest
         const updatedGuest = updateGuest(editingGuest.id, {
-          name: guestForm.name,
-          price: guestForm.price
+          name: guestForm.name.trim(),
+          price: guestForm.price.trim()
         });
         
         if (updatedGuest) {
           setGuests(prevGuests => 
             prevGuests.map(g => g.id === editingGuest.id ? updatedGuest : g)
           );
+          console.log('Guest updated:', updatedGuest.name);
+        } else {
+          alert('Failed to update guest. Please try again.');
+          return;
         }
       } else {
         // Add new guest
         const newGuest = addGuest({
-          name: guestForm.name,
-          price: guestForm.price,
+          name: guestForm.name.trim(),
+          price: guestForm.price.trim(),
           checkedIn: false,
           roomCode: roomCode
         });
         
-        setGuests(prevGuests => [...prevGuests, newGuest]);
+        if (newGuest) {
+          setGuests(prevGuests => [...prevGuests, newGuest]);
+          console.log('Guest added:', newGuest.name);
+        } else {
+          alert('Failed to add guest. Please try again.');
+          return;
+        }
       }
 
       setShowGuestModal(false);
@@ -99,8 +119,19 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const handleDeleteGuest = (guestId) => {
     if (window.confirm('Are you sure you want to delete this guest?')) {
       try {
-        deleteGuest(guestId);
-        setGuests(prevGuests => prevGuests.filter(g => g.id !== guestId));
+        const guest = guests.find(g => g.id === guestId);
+        if (!guest) {
+          console.error('Guest not found for deletion:', guestId);
+          return;
+        }
+        
+        const result = deleteGuest(guestId);
+        if (result) {
+          setGuests(prevGuests => prevGuests.filter(g => g.id !== guestId));
+          console.log('Guest deleted:', guest.name);
+        } else {
+          alert('Failed to delete guest. Please try again.');
+        }
       } catch (error) {
         console.error('Error deleting guest:', error);
         alert('Error deleting guest. Please try again.');

@@ -1,14 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { loadGuests } from '../utils/localStorage';
 
-const StatisticsScreen = ({ onLogout, onNavigate }) => {
-  // Sample statistics data
-  const stats = {
-    totalEarnings: '32600 kr',
-    totalGuests: 326,
+const StatisticsScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
+  const [stats, setStats] = useState({
+    totalEarnings: '0 kr',
+    totalGuests: 0,
     checkedIn: 0,
-    avgOrder: '100 kr',
+    avgOrder: '0 kr',
     checkinRate: 0
-  };
+  });
+
+  useEffect(() => {
+    const guests = loadGuests().filter(guest => guest.roomCode === roomCode);
+    const checkedInGuests = guests.filter(guest => guest.checkedIn);
+    
+    // Calculate total earnings
+    const totalEarnings = guests.reduce((sum, guest) => {
+      const priceStr = guest.price || '0 kr';
+      const priceNum = parseFloat(priceStr.replace(/[^\d.]/g, '')) || 0;
+      return sum + priceNum;
+    }, 0);
+    
+    // Calculate average order
+    const avgOrder = guests.length > 0 ? totalEarnings / guests.length : 0;
+    
+    // Calculate check-in rate
+    const checkinRate = guests.length > 0 ? (checkedInGuests.length / guests.length) * 100 : 0;
+    
+    setStats({
+      totalEarnings: `${Math.round(totalEarnings)} kr`,
+      totalGuests: guests.length,
+      checkedIn: checkedInGuests.length,
+      avgOrder: `${Math.round(avgOrder)} kr`,
+      checkinRate: Math.round(checkinRate)
+    });
+  }, [roomCode]);
 
   return (
     <div className="statistics-screen">

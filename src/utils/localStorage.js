@@ -56,8 +56,8 @@ export const deleteGuest = (guestId) => {
 
 export const addGuestsBatch = (newGuests) => {
   const existingGuests = loadGuests();
-  const guestsWithIds = newGuests.map(guest => ({
-    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+  const guestsWithIds = newGuests.map((guest, index) => ({
+    id: `${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
     ...guest,
     createdAt: new Date(),
     lastUpdated: new Date()

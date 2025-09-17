@@ -49,7 +49,7 @@ function App() {
         return (
           <div className="screen active">
             <div className="screen-content">
-              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
             </div>
           </div>
         );
