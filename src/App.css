@@ -1187,6 +1187,55 @@ code {
   color: rgba(255, 255, 255, 0.5);
 }
 
+.input-with-suggestions {
+  position: relative;
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1001;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.suggestion-name {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.suggestion-price {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
 .modal-footer {
   display: flex;
   gap: 12px;

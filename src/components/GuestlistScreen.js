@@ -6,6 +6,8 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
   const [showGuestModal, setShowGuestModal] = useState(false);
   const [editingGuest, setEditingGuest] = useState(null);
   const [guestForm, setGuestForm] = useState({ name: '', price: '' });
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   
   // Sample guest data with state management - all start unchecked
   const [guests, setGuests] = useState([
@@ -87,6 +89,36 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
     setShowGuestModal(false);
     setEditingGuest(null);
     setGuestForm({ name: '', price: '' });
+    setShowSuggestions(false);
+    setFilteredSuggestions([]);
+  };
+
+  const handleGuestNameChange = (e) => {
+    const value = e.target.value;
+    setGuestForm({ ...guestForm, name: value });
+    
+    if (value.length > 0) {
+      const suggestions = guests.filter(guest => 
+        guest.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredSuggestions(suggestions);
+      setShowSuggestions(suggestions.length > 0);
+    } else {
+      setShowSuggestions(false);
+      setFilteredSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (guest) => {
+    setGuestForm({ name: guest.name, price: guest.price });
+    setEditingGuest(guest);
+    setShowSuggestions(false);
+    setFilteredSuggestions([]);
+  };
+
+  const handleClickOutside = (e) => {
+    if (e.target.closest('.input-with-suggestions')) return;
+    setShowSuggestions(false);
   };
 
   const filteredGuests = guests.filter(guest => 
@@ -192,7 +224,7 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
       {/* Guest Modal */}
       {showGuestModal && (
         <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} onMouseDown={handleClickOutside}>
             <div className="modal-header">
               <h3>{editingGuest ? 'Edit Guest' : 'Add New Guest'}</h3>
               <div className="modal-header-actions">
@@ -218,13 +250,30 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
             <div className="modal-body">
               <div className="form-group">
                 <label htmlFor="guestName">Guest Name</label>
-                <input
-                  id="guestName"
-                  type="text"
-                  value={guestForm.name}
-                  onChange={(e) => setGuestForm({ ...guestForm, name: e.target.value })}
-                  placeholder="Enter guest name"
-                />
+                <div className="input-with-suggestions">
+                  <input
+                    id="guestName"
+                    type="text"
+                    value={guestForm.name}
+                    onChange={handleGuestNameChange}
+                    placeholder="Enter guest name"
+                    autoComplete="off"
+                  />
+                  {showSuggestions && (
+                    <div className="suggestions-dropdown">
+                      {filteredSuggestions.map(guest => (
+                        <div
+                          key={guest.id}
+                          className="suggestion-item"
+                          onClick={() => handleSuggestionClick(guest)}
+                        >
+                          <span className="suggestion-name">{guest.name}</span>
+                          <span className="suggestion-price">{guest.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="guestPrice">Price</label>
