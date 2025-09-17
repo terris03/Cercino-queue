@@ -16,11 +16,19 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Load guests from Firebase with real-time updates
+  // Load guests instantly from localStorage, then sync with Firebase
   useEffect(() => {
+    console.log('Loading guests for roomCode:', roomCode);
+    
+    // Load from localStorage immediately for instant display
+    const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
+    console.log('Loaded from localStorage instantly:', localGuests.length, 'guests');
+    setGuests(localGuests);
+    setLoading(false);
+    
+    // Then set up Firebase listener for real-time sync
     console.log('Setting up Firebase listener for roomCode:', roomCode);
     
-    // Test Firebase connection first
     try {
       const guestsRef = collection(db, 'guests');
       console.log('Firebase collection reference created:', guestsRef);
@@ -39,8 +47,11 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           guestsCount: guestsData.length,
           guests: guestsData.slice(0, 3) // First 3 guests for debugging
         });
-        setGuests(guestsData);
-        setLoading(false);
+        
+        // Only update if Firebase has more recent data
+        if (guestsData.length > 0) {
+          setGuests(guestsData);
+        }
       }, (error) => {
         console.error('Firebase error loading guests:', error);
         console.error('Error details:', {
@@ -48,24 +59,13 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           message: error.message,
           roomCode: roomCode
         });
-        
-        // Fallback to localStorage if Firebase fails
-        console.log('Falling back to localStorage...');
-        const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
-        console.log('Loaded from localStorage:', localGuests.length, 'guests');
-        setGuests(localGuests);
-        setLoading(false);
+        // Keep using localStorage data, don't change anything
       });
 
       return () => unsubscribe();
     } catch (error) {
       console.error('Firebase setup error:', error);
-      // Immediate fallback to localStorage
-      console.log('Firebase setup failed, using localStorage...');
-      const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
-      console.log('Loaded from localStorage:', localGuests.length, 'guests');
-      setGuests(localGuests);
-      setLoading(false);
+      // Keep using localStorage data, don't change anything
     }
   }, [roomCode]);
 
