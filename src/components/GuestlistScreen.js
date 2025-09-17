@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 const GuestlistScreen = ({ onLogout, onNavigate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter] = useState('All');
-  const [checkedInCount, setCheckedInCount] = useState(0);
   
-  // Sample guest data
-  const [guests] = useState([
+  // Sample guest data with state management
+  const [guests, setGuests] = useState([
     { id: 1, name: 'Melvin Edström', price: '100 kr', checkedIn: false },
     { id: 2, name: 'Vilma Lundin', price: '100 kr', checkedIn: false },
     { id: 3, name: 'Julia Rådenfjord', price: '100 kr', checkedIn: false },
@@ -18,11 +17,17 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
   ]);
 
   const totalGuests = guests.length;
+  const checkedInCount = guests.filter(guest => guest.checkedIn).length;
   const remainingGuests = totalGuests - checkedInCount;
 
   const handleCheckIn = (guestId) => {
-    // In a real app, this would update the database
-    setCheckedInCount(prev => prev + 1);
+    setGuests(prevGuests => 
+      prevGuests.map(guest => 
+        guest.id === guestId 
+          ? { ...guest, checkedIn: !guest.checkedIn }
+          : guest
+      )
+    );
   };
 
   const filteredGuests = guests.filter(guest => 
