@@ -247,6 +247,7 @@ code {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  min-height: 50vh;
 }
 
 
@@ -261,10 +262,15 @@ code {
 
 .hotel-form-section {
   background: #000000;
-  padding: 40px 30px 30px 30px;
+  padding: 20px 30px 30px 30px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 50vh;
 }
 
 .hotel-welcome-text {
@@ -290,7 +296,7 @@ code {
 .hotel-login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .hotel-input-group {
@@ -1359,5 +1365,25 @@ code {
   
   .event-title {
     font-size: 20px;
+  }
+  
+  .hotel-form-section {
+    padding: 15px 20px 20px 20px;
+    gap: 15px;
+    max-height: 45vh;
+  }
+  
+  .hotel-title {
+    font-size: 24px;
+  }
+  
+  .hotel-subtitle {
+    font-size: 14px;
+  }
+  
+  .hotel-room-input,
+  .hotel-explore-btn {
+    padding: 14px 18px;
+    font-size: 15px;
   }
 }
