@@ -18,8 +18,8 @@ console.log('🔥 Firebase Config:', firebaseConfig);
 const app = initializeApp(firebaseConfig);
 console.log('🔥 Firebase App initialized:', app);
 
-// Initialize Firestore with custom database name
-export const db = getFirestore(app, 'cercino-db');
+// Initialize Firestore with default database
+export const db = getFirestore(app);
 console.log('🔥 Firestore DB initialized:', db);
 
 // Initialize Analytics (only in browser)
