@@ -546,7 +546,7 @@ code {
   top: 80px;
   left: 0;
   right: 0;
-  bottom: 70px;
+  bottom: 80px;
   overflow-y: auto;
   padding: 8px;
   background: transparent;
@@ -1062,14 +1062,15 @@ code {
   left: 0;
   right: 0;
   background: #000000;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 2px solid #ff6b9d;
   display: flex;
-  padding: 8px 20px;
-  z-index: 1000;
-  border-radius: 20px 20px 0 0;
-  height: 60px;
+  padding: 12px 20px;
+  z-index: 9999;
+  border-radius: 0;
+  height: 70px;
   margin: 0;
   width: 100%;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .nav-item {
@@ -1078,11 +1079,12 @@ code {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 12px 8px;
+  padding: 8px 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border-radius: 12px;
-  margin: 0 4px;
+  border-radius: 8px;
+  margin: 0 2px;
+  color: #ffffff;
 }
 
 .nav-item:hover {
@@ -1390,7 +1392,7 @@ code {
   
   .guest-list {
     top: 70px;
-    bottom: 70px;
+    bottom: 80px;
     padding: 6px;
   }
   
