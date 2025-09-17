@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, writeBatch } from 'firebase/firestore';
-import { db } from '../firebase';
-import { loadGuests } from '../utils/localStorage';
+import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,74 +14,31 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Load guests instantly from localStorage, then sync with Firebase
+  // Load guests from localStorage only
   useEffect(() => {
     console.log('Loading guests for roomCode:', roomCode);
     
-    // Load from localStorage immediately for instant display
     const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
-    console.log('Loaded from localStorage instantly:', localGuests.length, 'guests');
+    console.log('Loaded from localStorage:', localGuests.length, 'guests');
     setGuests(localGuests);
     setLoading(false);
-    
-    // Then set up Firebase listener for real-time sync
-    console.log('Setting up Firebase listener for roomCode:', roomCode);
-    
-    try {
-      const guestsRef = collection(db, 'guests');
-      console.log('Firebase collection reference created:', guestsRef);
-      
-      const q = query(guestsRef, where('roomCode', '==', roomCode));
-      console.log('Firebase query created:', q);
-      
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        console.log('Firebase snapshot received:', snapshot);
-        const guestsData = [];
-        snapshot.forEach((doc) => {
-          guestsData.push({ id: doc.id, ...doc.data() });
-        });
-        console.log('Firebase snapshot processed:', {
-          roomCode: roomCode,
-          guestsCount: guestsData.length,
-          guests: guestsData.slice(0, 3) // First 3 guests for debugging
-        });
-        
-        // Only update if Firebase has more recent data
-        if (guestsData.length > 0) {
-          setGuests(guestsData);
-        }
-      }, (error) => {
-        console.error('Firebase error loading guests:', error);
-        console.error('Error details:', {
-          code: error.code,
-          message: error.message,
-          roomCode: roomCode
-        });
-        // Keep using localStorage data, don't change anything
-      });
-
-      return () => unsubscribe();
-    } catch (error) {
-      console.error('Firebase setup error:', error);
-      // Keep using localStorage data, don't change anything
-    }
   }, [roomCode]);
 
   const totalGuests = guests.length;
   const checkedInCount = guests.filter(guest => guest.checkedIn).length;
   const remainingGuests = totalGuests - checkedInCount;
 
-  const handleCheckIn = async (guestId) => {
+  const handleCheckIn = (guestId) => {
     try {
-      const guest = guests.find(g => g.id === guestId);
-      const guestRef = doc(db, 'guests', guestId);
-      
-      await updateDoc(guestRef, {
-        checkedIn: !guest.checkedIn,
-        lastUpdated: new Date()
+      const updatedGuest = updateGuest(guestId, {
+        checkedIn: !guests.find(g => g.id === guestId).checkedIn
       });
       
-      // Firebase real-time listener will automatically update the state
+      if (updatedGuest) {
+        setGuests(prevGuests => 
+          prevGuests.map(g => g.id === guestId ? updatedGuest : g)
+        );
+      }
     } catch (error) {
       console.error('Error checking in guest:', error);
     }
@@ -101,7 +56,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     setShowGuestModal(true);
   };
 
-  const handleSaveGuest = async () => {
+  const handleSaveGuest = () => {
     if (!guestForm.name.trim() || !guestForm.price.trim()) {
       alert('Please fill in all fields');
       return;
@@ -110,40 +65,42 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     try {
       if (editingGuest) {
         // Edit existing guest
-        const guestRef = doc(db, 'guests', editingGuest.id);
-        await updateDoc(guestRef, {
+        const updatedGuest = updateGuest(editingGuest.id, {
           name: guestForm.name,
-          price: guestForm.price,
-          lastUpdated: new Date()
+          price: guestForm.price
         });
+        
+        if (updatedGuest) {
+          setGuests(prevGuests => 
+            prevGuests.map(g => g.id === editingGuest.id ? updatedGuest : g)
+          );
+        }
       } else {
         // Add new guest
-        await addDoc(collection(db, 'guests'), {
+        const newGuest = addGuest({
           name: guestForm.name,
           price: guestForm.price,
           checkedIn: false,
-          roomCode: roomCode,
-          createdAt: new Date(),
-          lastUpdated: new Date()
+          roomCode: roomCode
         });
+        
+        setGuests(prevGuests => [...prevGuests, newGuest]);
       }
 
       setShowGuestModal(false);
       setEditingGuest(null);
       setGuestForm({ name: '', price: '' });
-      
-      // Firebase real-time listener will automatically update the state
     } catch (error) {
       console.error('Error saving guest:', error);
       alert('Error saving guest. Please try again.');
     }
   };
 
-  const handleDeleteGuest = async (guestId) => {
+  const handleDeleteGuest = (guestId) => {
     if (window.confirm('Are you sure you want to delete this guest?')) {
       try {
-        await deleteDoc(doc(db, 'guests', guestId));
-        // Firebase real-time listener will automatically update the state
+        deleteGuest(guestId);
+        setGuests(prevGuests => prevGuests.filter(g => g.id !== guestId));
       } catch (error) {
         console.error('Error deleting guest:', error);
         alert('Error deleting guest. Please try again.');
@@ -322,24 +279,16 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         return;
       }
 
-      // Add guests to Firebase using batch write
-      const batch = writeBatch(db);
+      // Add guests to localStorage
+      const addedGuests = addGuestsBatch(newGuests.map(guest => ({
+        ...guest,
+        roomCode: roomCode,
+        checkedIn: false
+      })));
       
-      newGuests.forEach(guest => {
-        const guestRef = doc(collection(db, 'guests'));
-        batch.set(guestRef, {
-          ...guest,
-          roomCode: roomCode,
-          checkedIn: false,
-          createdAt: new Date(),
-          lastUpdated: new Date()
-        });
-      });
-      
-      await batch.commit();
+      setGuests(prevGuests => [...prevGuests, ...addedGuests]);
       
       alert(`Successfully imported ${newGuests.length} guests!`);
-      // Firebase real-time listener will automatically update the state
     } catch (error) {
       console.error('Error importing CSV:', error);
       alert(`Error importing CSV file: ${error.message}\n\nPlease check the format and try again.`);
