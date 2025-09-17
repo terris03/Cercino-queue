@@ -548,7 +548,7 @@ code {
 
 .guest-list {
   position: fixed;
-  top: 240px;
+  top: 280px;
   left: 0;
   right: 0;
   bottom: 80px;
@@ -1388,7 +1388,7 @@ code {
   }
   
   .guest-list {
-    top: 220px;
+    top: 260px;
     padding: 15px;
   }
   
