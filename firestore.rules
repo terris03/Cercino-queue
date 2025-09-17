@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/cercino-db/documents {
+    // Allow read/write access to guests collection
+    match /guests/{document} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy } from 'firebase/firestore';
+import React, { useState, useEffect, useRef } from 'react';
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, writeBatch } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
@@ -12,6 +12,8 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Set up real-time listener for guests
   useEffect(() => {
@@ -145,6 +147,82 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     setShowSuggestions(false);
   };
 
+  const parseCSV = (csvText) => {
+    const lines = csvText.split('\n');
+    const guests = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      // Split by comma, handle quoted values
+      const values = line.split(',').map(val => val.trim().replace(/^"|"$/g, ''));
+      
+      if (values.length >= 2) {
+        guests.push({
+          name: values[0] || `Guest ${i + 1}`,
+          price: values[1] || '100 kr',
+          checkedIn: false,
+          roomCode: roomCode,
+          createdAt: new Date(),
+          lastUpdated: new Date()
+        });
+      }
+    }
+    
+    return guests;
+  };
+
+  const handleCSVImport = async () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Reset file input
+    event.target.value = '';
+
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+      alert('Please select a CSV file');
+      return;
+    }
+
+    setImporting(true);
+
+    try {
+      const text = await file.text();
+      const newGuests = parseCSV(text);
+
+      if (newGuests.length === 0) {
+        alert('No valid guest data found in CSV file');
+        setImporting(false);
+        return;
+      }
+
+      // Use batch write for better performance
+      const batch = writeBatch(db);
+      const guestsRef = collection(db, 'guests');
+
+      newGuests.forEach(guest => {
+        const docRef = doc(guestsRef);
+        batch.set(docRef, guest);
+      });
+
+      await batch.commit();
+      
+      alert(`Successfully imported ${newGuests.length} guests!`);
+    } catch (error) {
+      console.error('Error importing CSV:', error);
+      alert('Error importing CSV file. Please check the format and try again.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const filteredGuests = guests.filter(guest => 
     guest.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -189,9 +267,9 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
             <i className="fas fa-plus"></i>
             Add / Edit Guest
           </button>
-          <button className="import-csv-btn">
-            <i className="fas fa-upload"></i>
-            Import CSV
+          <button className="import-csv-btn" onClick={handleCSVImport} disabled={importing}>
+            <i className={`fas ${importing ? 'fa-spinner fa-spin' : 'fa-upload'}`}></i>
+            {importing ? 'Importing...' : 'Import CSV'}
           </button>
         </div>
       </div>
@@ -334,6 +412,15 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           </div>
         </div>
       )}
+
+      {/* Hidden file input for CSV import */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv"
+        onChange={handleFileUpload}
+        style={{ display: 'none' }}
+      />
     </div>
   );
 };
