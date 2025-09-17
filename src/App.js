@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import LoginScreen from './components/LoginScreen';
 import GuestlistScreen from './components/GuestlistScreen';
-import StatisticsScreen from './components/StatisticsScreen';
 import ProfileScreen from './components/ProfileScreen';
 import './App.css';
 
@@ -42,14 +41,6 @@ function App() {
           <div className="screen active">
             <div className="screen-content">
               <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
-            </div>
-          </div>
-        );
-      case 'statistics':
-        return (
-          <div className="screen active">
-            <div className="screen-content">
-              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
             </div>
           </div>
         );

@@ -88,10 +88,6 @@ const ProfileScreen = ({ onLogout, onNavigate }) => {
             <i className="fas fa-users"></i>
             <span>Guests</span>
           </div>
-          <div className="nav-item" onClick={() => onNavigate('statistics')}>
-            <i className="fas fa-chart-bar"></i>
-            <span>Stats</span>
-          </div>
           <div className="nav-item active" onClick={() => onNavigate('profile')}>
             <i className="fas fa-user"></i>
             <span>Profile</span>

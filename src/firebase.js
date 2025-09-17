@@ -1,6 +1,24 @@
-// Firebase temporarily disabled - using localStorage only
-// To re-enable Firebase, replace with your actual Firebase config
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 
-export const app = null;
-export const analytics = null;
-export const db = null;
+const firebaseConfig = {
+  apiKey: "AIzaSyC8QZ8QZ8QZ8QZ8QZ8QZ8QZ8QZ8QZ8QZ8Q",
+  authDomain: "cercino-queue.firebaseapp.com",
+  projectId: "cercino-queue",
+  storageBucket: "cercino-queue.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:abcdef1234567890abcdef",
+  measurementId: "G-ABCDEFGHIJ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore
+export const db = getFirestore(app);
+
+// Initialize Analytics (only in browser)
+export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+
+export { app };
