@@ -381,22 +381,58 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     }
   };
 
-  const handleClearGuests = () => {
+  const handleClearGuests = async () => {
     if (window.confirm('Are you sure you want to clear all guests? This cannot be undone.')) {
       try {
-        // Clear from localStorage
+        console.log('🔥 Starting Firebase batch delete...');
+        console.log('🔥 Number of guests to delete:', guests.length);
+        console.log('🔥 Room code:', roomCode);
+        
+        // Delete from Firebase using batch write
+        const batch = writeBatch(db);
+        console.log('🔥 Batch object created:', batch);
+        
+        guests.forEach((guest, index) => {
+          console.log(`🔥 Deleting guest ${index + 1}:`, guest.name);
+          const guestRef = doc(db, 'guests', guest.id);
+          console.log(`🔥 Document reference for guest ${index + 1}:`, guestRef);
+          
+          batch.delete(guestRef);
+          console.log(`🔥 Added guest ${index + 1} to delete batch`);
+        });
+        
+        console.log('🔥 Committing delete batch to Firebase...');
+        await batch.commit();
+        console.log('🔥 Delete batch committed successfully!');
+        console.log(`✅ Successfully deleted ${guests.length} guests from Firebase!`);
+        
+        // Also clear from localStorage as backup
+        const allGuests = loadGuests();
+        const otherRoomGuests = allGuests.filter(g => g.roomCode !== roomCode);
+        localStorage.setItem('cercino-guests', JSON.stringify(otherRoomGuests));
+        console.log('💾 Also cleared from localStorage');
+        
+        // Update state
+        setGuests([]);
+        
+        alert(`Successfully cleared ${guests.length} guests from the database!`);
+      } catch (firebaseError) {
+        console.error('🔥 Firebase batch delete FAILED:', firebaseError);
+        console.error('🔥 Firebase error code:', firebaseError.code);
+        console.error('🔥 Firebase error message:', firebaseError.message);
+        console.error('🔥 Firebase error details:', firebaseError.details);
+        console.error('🔥 Full Firebase error object:', firebaseError);
+        
+        // Fallback to localStorage only
+        console.log('💾 Falling back to localStorage delete...');
         const allGuests = loadGuests();
         const otherRoomGuests = allGuests.filter(g => g.roomCode !== roomCode);
         localStorage.setItem('cercino-guests', JSON.stringify(otherRoomGuests));
         
-        // Clear from state
+        // Update state
         setGuests([]);
-        
-        console.log('Guest list cleared for room:', roomCode);
-        alert('Guest list cleared successfully!');
-      } catch (error) {
-        console.error('Error clearing guests:', error);
-        alert('Error clearing guests. Please try again.');
+        console.log('💾 localStorage delete completed');
+        alert(`Cleared ${guests.length} guests from local storage (Firebase error occurred)`);
       }
     }
   };
