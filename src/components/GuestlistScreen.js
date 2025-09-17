@@ -3,7 +3,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where
 import { db } from '../firebase';
 import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
-const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
+const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123', onGuestsUpdate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter] = useState('All');
   const [showGuestModal, setShowGuestModal] = useState(false);
@@ -56,6 +56,11 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         
         // Update state with Firebase data
         setGuests(firebaseGuests);
+        
+        // Notify parent component of guests update
+        if (onGuestsUpdate) {
+          onGuestsUpdate(firebaseGuests);
+        }
         
         // Also update localStorage with Firebase data
         const allGuests = loadGuests();

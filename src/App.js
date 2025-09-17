@@ -10,6 +10,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roomCode, setRoomCode] = useState('123');
+  const [guests, setGuests] = useState([]);
 
   const handleLogin = (code) => {
     setRoomCode(code);
@@ -28,6 +29,10 @@ function App() {
     }
   };
 
+  const handleGuestsUpdate = (updatedGuests) => {
+    setGuests(updatedGuests);
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'login':
@@ -42,7 +47,7 @@ function App() {
         return (
           <div className="screen active">
             <div className="screen-content">
-              <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
+              <GuestlistScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} onGuestsUpdate={handleGuestsUpdate} />
             </div>
           </div>
         );
@@ -50,7 +55,7 @@ function App() {
         return (
           <div className="screen active">
             <div className="screen-content">
-              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+              <StatisticsScreen onLogout={handleLogout} onNavigate={handleNavigation} guests={guests} />
             </div>
           </div>
         );

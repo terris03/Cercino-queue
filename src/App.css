@@ -762,8 +762,9 @@ code {
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 40px;
+  gap: 15px;
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 .stat-card {
@@ -900,6 +901,122 @@ code {
   font-size: 14px;
   margin: 0;
   text-align: center;
+}
+
+/* Fluid Diagram */
+.fluid-diagram-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 20px;
+}
+
+.fluid-diagram-section h2 {
+  font-size: 20px;
+  margin: 0 0 20px 0;
+  color: #ffffff;
+  text-align: center;
+}
+
+.fluid-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.fluid-box {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.fluid-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.fluid-box.total {
+  border: 2px solid #E91E63;
+}
+
+.fluid-box.checked {
+  border: 2px solid #009688;
+}
+
+.fluid-box.remaining {
+  border: 2px solid #FF9800;
+}
+
+.fluid-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.fluid-box.total .fluid-icon {
+  background: #E91E63;
+}
+
+.fluid-box.checked .fluid-icon {
+  background: #009688;
+}
+
+.fluid-box.remaining .fluid-icon {
+  background: #FF9800;
+}
+
+.fluid-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.fluid-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.fluid-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.fluid-arrow {
+  color: #888;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .fluid-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .fluid-arrow {
+    transform: rotate(90deg);
+  }
 }
 
 .guest-list {

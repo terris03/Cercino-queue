@@ -1,14 +1,19 @@
 import React from 'react';
 
-const StatisticsScreen = ({ onLogout, onNavigate }) => {
-  const stats = {
-    totalGuests: 150,
-    checkedIn: 89,
-    remaining: 61,
-    totalRevenue: 25400
-  };
-
-  const checkInRate = ((stats.checkedIn / stats.totalGuests) * 100).toFixed(1);
+const StatisticsScreen = ({ onLogout, onNavigate, guests = [] }) => {
+  // Calculate real stats from guest data
+  const totalGuests = guests.length;
+  const checkedIn = guests.filter(guest => guest.checkedIn).length;
+  const remaining = totalGuests - checkedIn;
+  
+  // Calculate total revenue from guest prices
+  const totalRevenue = guests.reduce((sum, guest) => {
+    const price = parseFloat(guest.price?.replace(/[^\d.]/g, '')) || 0;
+    return sum + price;
+  }, 0);
+  
+  const avgOrder = totalGuests > 0 ? Math.round(totalRevenue / totalGuests) : 0;
+  const checkInRate = totalGuests > 0 ? ((checkedIn / totalGuests) * 100).toFixed(1) : 0;
 
   return (
     <div className="statistics-screen">
@@ -24,7 +29,7 @@ const StatisticsScreen = ({ onLogout, onNavigate }) => {
             </div>
             <div className="stat-content">
               <h3>Total Earnings</h3>
-              <p className="stat-number">{stats.totalRevenue.toLocaleString()} kr</p>
+              <p className="stat-number">{totalRevenue.toLocaleString()} kr</p>
             </div>
           </div>
 
@@ -34,7 +39,7 @@ const StatisticsScreen = ({ onLogout, onNavigate }) => {
             </div>
             <div className="stat-content">
               <h3>Total Guests</h3>
-              <p className="stat-number">{stats.totalGuests}</p>
+              <p className="stat-number">{totalGuests}</p>
             </div>
           </div>
 
@@ -44,7 +49,7 @@ const StatisticsScreen = ({ onLogout, onNavigate }) => {
             </div>
             <div className="stat-content">
               <h3>Checked In</h3>
-              <p className="stat-number">{stats.checkedIn}</p>
+              <p className="stat-number">{checkedIn}</p>
             </div>
           </div>
 
@@ -54,7 +59,7 @@ const StatisticsScreen = ({ onLogout, onNavigate }) => {
             </div>
             <div className="stat-content">
               <h3>Avg Order</h3>
-              <p className="stat-number">{Math.round(stats.totalRevenue / stats.totalGuests)} kr</p>
+              <p className="stat-number">{avgOrder} kr</p>
             </div>
           </div>
         </div>
@@ -77,6 +82,49 @@ const StatisticsScreen = ({ onLogout, onNavigate }) => {
               className="progress-fill" 
               style={{ width: `${checkInRate}%` }}
             ></div>
+          </div>
+        </div>
+
+        <div className="fluid-diagram-section">
+          <h2>Guest Flow</h2>
+          <div className="fluid-container">
+            <div className="fluid-box total">
+              <div className="fluid-icon">
+                <i className="fas fa-users"></i>
+              </div>
+              <div className="fluid-content">
+                <span className="fluid-number">{totalGuests}</span>
+                <span className="fluid-label">Total Guests</span>
+              </div>
+            </div>
+            
+            <div className="fluid-arrow">
+              <i className="fas fa-arrow-right"></i>
+            </div>
+            
+            <div className="fluid-box checked">
+              <div className="fluid-icon">
+                <i className="fas fa-check-circle"></i>
+              </div>
+              <div className="fluid-content">
+                <span className="fluid-number">{checkedIn}</span>
+                <span className="fluid-label">Checked In</span>
+              </div>
+            </div>
+            
+            <div className="fluid-arrow">
+              <i className="fas fa-arrow-right"></i>
+            </div>
+            
+            <div className="fluid-box remaining">
+              <div className="fluid-icon">
+                <i className="fas fa-clock"></i>
+              </div>
+              <div className="fluid-content">
+                <span className="fluid-number">{remaining}</span>
+                <span className="fluid-label">Remaining</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
