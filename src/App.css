@@ -266,10 +266,11 @@ code {
   flex-direction: column;
   gap: 20px;
   position: absolute;
-  bottom: 0;
+  bottom: 20px;
   left: 0;
   right: 0;
-  height: 40vh;
+  height: auto;
+  min-height: 200px;
 }
 
 .hotel-welcome-text {
@@ -1367,13 +1368,14 @@ code {
   }
   
   .hotel-form-section {
-    padding: 15px 20px 20px 20px;
-    gap: 15px;
-    height: 35vh;
+    padding: 10px 20px 15px 20px;
+    gap: 12px;
+    bottom: 10px;
+    min-height: 180px;
   }
   
   .hotel-image-section {
-    height: 65vh;
+    height: 75vh;
   }
   
   .hotel-title {
