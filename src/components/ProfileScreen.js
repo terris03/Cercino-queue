@@ -1,6 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const ProfileScreen = ({ onLogout, onNavigate }) => {
+const ProfileScreen = ({ onLogout, onNavigate, roomCode }) => {
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const handleChangePassword = () => {
+    if (currentPassword !== '1515') {
+      alert('Current password is incorrect');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      alert('New passwords do not match');
+      return;
+    }
+    
+    if (newPassword.length < 4) {
+      alert('Password must be at least 4 characters');
+      return;
+    }
+    
+    // Update the password (in a real app, this would be sent to server)
+    alert(`Password changed successfully! New password: ${newPassword}`);
+    setShowPasswordModal(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    // In a real app, this would update the global theme
+    alert(`Theme changed to ${isDarkMode ? 'Light' : 'Dark'} mode`);
+  };
+
   return (
     <div className="profile-screen">
       <div className="profile-container">
@@ -18,8 +54,8 @@ const ProfileScreen = ({ onLogout, onNavigate }) => {
               <i className="fas fa-user"></i>
             </div>
             <div className="profile-details">
-              <h2>Admin User</h2>
-              <p>admin@cercino.eu</p>
+              <h2>Room {roomCode}</h2>
+              <p>Event Manager</p>
               <span className="role-badge">Administrator</span>
             </div>
           </div>
@@ -28,35 +64,24 @@ const ProfileScreen = ({ onLogout, onNavigate }) => {
           <div className="settings-section">
             <h3>Settings</h3>
             
-            <div className="setting-item">
-              <div className="setting-icon">
-                <i className="fas fa-user-edit"></i>
-              </div>
-              <div className="setting-content">
-                <h4>Edit Profile</h4>
-                <p>Update your personal information</p>
-              </div>
-              <i className="fas fa-chevron-right"></i>
-            </div>
-
-            <div className="setting-item">
+            <div className="setting-item" onClick={() => setShowPasswordModal(true)}>
               <div className="setting-icon">
                 <i className="fas fa-lock"></i>
               </div>
               <div className="setting-content">
                 <h4>Change Password</h4>
-                <p>Update your account password</p>
+                <p>Update your room access code</p>
               </div>
               <i className="fas fa-chevron-right"></i>
             </div>
 
-            <div className="setting-item">
+            <div className="setting-item" onClick={toggleTheme}>
               <div className="setting-icon">
-                <i className="fas fa-bell"></i>
+                <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'}`}></i>
               </div>
               <div className="setting-content">
-                <h4>Notifications</h4>
-                <p>Manage notification preferences</p>
+                <h4>Change Theme</h4>
+                <p>Switch between light and dark mode</p>
               </div>
               <i className="fas fa-chevron-right"></i>
             </div>
@@ -82,7 +107,69 @@ const ProfileScreen = ({ onLogout, onNavigate }) => {
           </div>
         </div>
 
-        {/* Bottom Navigation */}
+        {/* Password Change Modal */}
+        {showPasswordModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h3>Change Password</h3>
+                <button 
+                  className="modal-close" 
+                  onClick={() => setShowPasswordModal(false)}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Confirm New Password</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                  />
+                </div>
+              </div>
+              
+              <div className="modal-footer">
+                <button 
+                  className="btn-secondary" 
+                  onClick={() => setShowPasswordModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn-primary" 
+                  onClick={handleChangePassword}
+                >
+                  Change Password
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

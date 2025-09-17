@@ -9,7 +9,7 @@ import './App.css';
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [roomCode, setRoomCode] = useState('123');
+  const [roomCode, setRoomCode] = useState('1515');
   const [guests, setGuests] = useState([]);
 
   const handleLogin = (code) => {
@@ -63,7 +63,7 @@ function App() {
         return (
           <div className="screen active">
             <div className="screen-content">
-              <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} />
+              <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
             </div>
           </div>
         );

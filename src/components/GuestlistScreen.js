@@ -3,7 +3,7 @@ import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where
 import { db } from '../firebase';
 import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
-const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123', onGuestsUpdate }) => {
+const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpdate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter] = useState('All');
   const [showGuestModal, setShowGuestModal] = useState(false);

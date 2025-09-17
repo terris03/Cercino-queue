@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const LoginScreen = ({ onLogin }) => {
-  const [roomNumber, setRoomNumber] = useState('1515');
+  const [roomNumber, setRoomNumber] = useState('');
 
   const handleInputChange = (e) => {
     setRoomNumber(e.target.value);
@@ -32,14 +32,14 @@ const LoginScreen = ({ onLogin }) => {
 
         <form className="hotel-login-form" onSubmit={handleSubmit}>
           <div className="hotel-input-group">
-            <input
-              type="password"
-              className="hotel-room-input"
-              placeholder="Room Number"
-              value={roomNumber}
-              onChange={handleInputChange}
-              required
-            />
+                <input
+                  type="password"
+                  className="hotel-room-input"
+                  placeholder="Your pin here"
+                  value={roomNumber}
+                  onChange={handleInputChange}
+                  required
+                />
           </div>
 
           <button type="submit" className="hotel-explore-btn">
