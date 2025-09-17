@@ -3,13 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC8QZ8QZ8QZ8QZ8QZ8QZ8QZ8QZ8QZ8QZ8Q",
+  apiKey: "AIzaSyB3Q2B-zbCehd_9LZvdIB_T6ZkgHqTlw1M",
   authDomain: "cercino-queue.firebaseapp.com",
   projectId: "cercino-queue",
-  storageBucket: "cercino-queue.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef1234567890abcdef",
-  measurementId: "G-ABCDEFGHIJ"
+  storageBucket: "cercino-queue.firebasestorage.app",
+  messagingSenderId: "217220700501",
+  appId: "1:217220700501:web:fd8102f98e0255a3c0b7dc",
+  measurementId: "G-H7356FG4GZ"
 };
 
 // Initialize Firebase
