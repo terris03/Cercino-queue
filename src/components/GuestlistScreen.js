@@ -19,38 +19,54 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   // Load guests from Firebase with real-time updates
   useEffect(() => {
     console.log('Setting up Firebase listener for roomCode:', roomCode);
-    const guestsRef = collection(db, 'guests');
-    const q = query(guestsRef, where('roomCode', '==', roomCode), orderBy('createdAt', 'desc'));
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const guestsData = [];
-      snapshot.forEach((doc) => {
-        guestsData.push({ id: doc.id, ...doc.data() });
-      });
-      console.log('Firebase snapshot received:', {
-        roomCode: roomCode,
-        guestsCount: guestsData.length,
-        guests: guestsData.slice(0, 3) // First 3 guests for debugging
-      });
-      setGuests(guestsData);
-      setLoading(false);
-    }, (error) => {
-      console.error('Firebase error loading guests:', error);
-      console.error('Error details:', {
-        code: error.code,
-        message: error.message,
-        roomCode: roomCode
-      });
+    // Test Firebase connection first
+    try {
+      const guestsRef = collection(db, 'guests');
+      console.log('Firebase collection reference created:', guestsRef);
       
-      // Fallback to localStorage if Firebase fails
-      console.log('Falling back to localStorage...');
+      const q = query(guestsRef, where('roomCode', '==', roomCode));
+      console.log('Firebase query created:', q);
+      
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        console.log('Firebase snapshot received:', snapshot);
+        const guestsData = [];
+        snapshot.forEach((doc) => {
+          guestsData.push({ id: doc.id, ...doc.data() });
+        });
+        console.log('Firebase snapshot processed:', {
+          roomCode: roomCode,
+          guestsCount: guestsData.length,
+          guests: guestsData.slice(0, 3) // First 3 guests for debugging
+        });
+        setGuests(guestsData);
+        setLoading(false);
+      }, (error) => {
+        console.error('Firebase error loading guests:', error);
+        console.error('Error details:', {
+          code: error.code,
+          message: error.message,
+          roomCode: roomCode
+        });
+        
+        // Fallback to localStorage if Firebase fails
+        console.log('Falling back to localStorage...');
+        const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
+        console.log('Loaded from localStorage:', localGuests.length, 'guests');
+        setGuests(localGuests);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Firebase setup error:', error);
+      // Immediate fallback to localStorage
+      console.log('Firebase setup failed, using localStorage...');
       const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
       console.log('Loaded from localStorage:', localGuests.length, 'guests');
       setGuests(localGuests);
       setLoading(false);
-    });
-
-    return () => unsubscribe();
+    }
   }, [roomCode]);
 
   const totalGuests = guests.length;
