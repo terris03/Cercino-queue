@@ -27,6 +27,7 @@ const LoginScreen = ({ onLogin }) => {
         <div className="hotel-welcome-text">
           <h2 className="hotel-subtitle">Welcome to Cercino</h2>
           <h1 className="hotel-title">Your Wish is Our Command</h1>
+          <p style={{color: '#e55a8a', fontSize: '12px', marginTop: '10px'}}>✨ LOGIN FIXED ✨</p>
         </div>
 
         <form className="hotel-login-form" onSubmit={handleSubmit}>
