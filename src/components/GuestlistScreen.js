@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, writeBatch } from 'firebase/firestore';
-import { db } from '../firebase';
+import { saveGuests, loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,40 +14,36 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Set up real-time listener for guests
+  // Load guests from local storage
   useEffect(() => {
-    const guestsRef = collection(db, 'guests');
-    const q = query(guestsRef, where('roomCode', '==', roomCode), orderBy('createdAt', 'desc'));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const guestsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+    const loadGuestsData = () => {
+      const guestsData = loadGuests().filter(guest => guest.roomCode === roomCode);
       console.log('Loaded guests:', guestsData.length);
       console.log('First few guests:', guestsData.slice(0, 3));
       setGuests(guestsData);
       setLoading(false);
-    }, (error) => {
-      console.error('Error fetching guests:', error);
-      setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    loadGuestsData();
   }, [roomCode]);
 
   const totalGuests = guests.length;
   const checkedInCount = guests.filter(guest => guest.checkedIn).length;
   const remainingGuests = totalGuests - checkedInCount;
 
-  const handleCheckIn = async (guestId) => {
+  const handleCheckIn = (guestId) => {
     try {
-      const guestRef = doc(db, 'guests', guestId);
       const guest = guests.find(g => g.id === guestId);
-      await updateDoc(guestRef, {
-        checkedIn: !guest.checkedIn,
-        lastUpdated: new Date()
+      const updatedGuest = updateGuest(guestId, {
+        checkedIn: !guest.checkedIn
       });
+      
+      if (updatedGuest) {
+        // Update local state
+        setGuests(prevGuests => 
+          prevGuests.map(g => g.id === guestId ? updatedGuest : g)
+        );
+      }
     } catch (error) {
       console.error('Error updating guest:', error);
     }
@@ -66,7 +61,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     setShowGuestModal(true);
   };
 
-  const handleSaveGuest = async () => {
+  const handleSaveGuest = () => {
     if (!guestForm.name.trim() || !guestForm.price.trim()) {
       alert('Please fill in all fields');
       return;
@@ -75,22 +70,28 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     try {
       if (editingGuest) {
         // Edit existing guest
-        const guestRef = doc(db, 'guests', editingGuest.id);
-        await updateDoc(guestRef, {
+        const updatedGuest = updateGuest(editingGuest.id, {
           name: guestForm.name,
-          price: guestForm.price,
-          lastUpdated: new Date()
+          price: guestForm.price
         });
+        
+        if (updatedGuest) {
+          // Update local state
+          setGuests(prevGuests => 
+            prevGuests.map(g => g.id === editingGuest.id ? updatedGuest : g)
+          );
+        }
       } else {
         // Add new guest
-        await addDoc(collection(db, 'guests'), {
+        const newGuest = addGuest({
           name: guestForm.name,
           price: guestForm.price,
           checkedIn: false,
-          roomCode: roomCode,
-          createdAt: new Date(),
-          lastUpdated: new Date()
+          roomCode: roomCode
         });
+        
+        // Update local state
+        setGuests(prevGuests => [...prevGuests, newGuest]);
       }
 
       setShowGuestModal(false);
@@ -102,10 +103,12 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     }
   };
 
-  const handleDeleteGuest = async (guestId) => {
+  const handleDeleteGuest = (guestId) => {
     if (window.confirm('Are you sure you want to delete this guest?')) {
       try {
-        await deleteDoc(doc(db, 'guests', guestId));
+        deleteGuest(guestId);
+        // Update local state
+        setGuests(prevGuests => prevGuests.filter(g => g.id !== guestId));
       } catch (error) {
         console.error('Error deleting guest:', error);
         alert('Error deleting guest. Please try again.');
@@ -284,16 +287,11 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         return;
       }
 
-      // Use batch write for better performance
-      const batch = writeBatch(db);
-      const guestsRef = collection(db, 'guests');
-
-      newGuests.forEach(guest => {
-        const docRef = doc(guestsRef);
-        batch.set(docRef, guest);
-      });
-
-      await batch.commit();
+      // Add guests to local storage
+      const addedGuests = addGuestsBatch(newGuests);
+      
+      // Update local state
+      setGuests(prevGuests => [...prevGuests, ...addedGuests]);
       
       alert(`Successfully imported ${newGuests.length} guests!`);
     } catch (error) {
