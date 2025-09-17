@@ -235,7 +235,6 @@ code {
 }
 
 .hotel-image-section {
-  flex: 1;
   position: relative;
   background: 
     linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0.1) 80%, transparent 100%),
@@ -247,7 +246,7 @@ code {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  min-height: 50vh;
+  height: 60vh;
 }
 
 
@@ -270,7 +269,7 @@ code {
   bottom: 0;
   left: 0;
   right: 0;
-  max-height: 50vh;
+  height: 40vh;
 }
 
 .hotel-welcome-text {
@@ -1370,7 +1369,11 @@ code {
   .hotel-form-section {
     padding: 15px 20px 20px 20px;
     gap: 15px;
-    max-height: 45vh;
+    height: 35vh;
+  }
+  
+  .hotel-image-section {
+    height: 65vh;
   }
   
   .hotel-title {
