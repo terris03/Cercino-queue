@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { collection, addDoc, getDocs, updateDoc, doc, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase';
+import { saveGuests, loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
 const Guestlist = () => {
   const [guests, setGuests] = useState([]);
@@ -50,25 +49,13 @@ const Guestlist = () => {
     }
   ];
 
-  // Set up real-time listener for guests
+  // Load guests from local storage
   useEffect(() => {
-    console.log('Setting up real-time listener...');
-    const unsubscribe = onSnapshot(collection(db, 'guests'), (querySnapshot) => {
-      const guestsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      console.log('Real-time update: Loaded', guestsData.length, 'guests');
-      console.log('Guest data:', guestsData);
-      setGuests(guestsData);
-    }, (error) => {
-      console.error('Real-time listener error:', error);
-    });
-
-    return () => {
-      console.log('Cleaning up real-time listener');
-      unsubscribe();
-    };
+    console.log('Loading guests from local storage...');
+    const guestsData = loadGuests();
+    console.log('Loaded', guestsData.length, 'guests from local storage');
+    console.log('Guest data:', guestsData);
+    setGuests(guestsData);
   }, []);
 
   // Filter guests based on search term
@@ -80,13 +67,9 @@ const Guestlist = () => {
     setFilteredGuests(filtered);
   }, [guests, searchTerm]);
 
-  const loadGuests = useCallback(async () => {
+  const loadGuestsFromStorage = useCallback(() => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'guests'));
-      const guestsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const guestsData = loadGuests();
       setGuests(guestsData);
     } catch (error) {
       console.error('Error loading guests:', error);
@@ -129,14 +112,14 @@ const Guestlist = () => {
 
       console.log('Parsed', newGuests.length, 'guests from CSV');
 
-      // Add guests to Firebase
+      // Add guests to local storage
       try {
-        for (const guest of newGuests) {
-          await addDoc(collection(db, 'guests'), guest);
-        }
-        console.log('Successfully added', newGuests.length, 'guests to Firebase');
-        // Real-time listener will automatically update the list
-        alert(`Successfully imported ${newGuests.length} guests!`);
+        const addedGuests = addGuestsBatch(newGuests);
+        console.log('Successfully added', addedGuests.length, 'guests to local storage');
+        // Reload guests from storage
+        const updatedGuests = loadGuests();
+        setGuests(updatedGuests);
+        alert(`Successfully imported ${addedGuests.length} guests!`);
         
         // Reset file input to allow re-uploading the same file
         event.target.value = '';
@@ -172,24 +155,26 @@ const Guestlist = () => {
 
   const handleCheckIn = useCallback(async (guestId, currentStatus) => {
     try {
-      const guestRef = doc(db, 'guests', guestId);
       const newStatus = !currentStatus;
-      await updateDoc(guestRef, {
+      const updatedGuest = updateGuest(guestId, {
         checkedIn: newStatus,
         checkInTime: newStatus ? new Date() : null
       });
-      // Optimistic update for faster UI response
-      setGuests(prevGuests => 
-        prevGuests.map(guest => 
-          guest.id === guestId 
-            ? { 
-                ...guest, 
-                checkedIn: newStatus, 
-                checkInTime: newStatus ? new Date() : null 
-              }
-            : guest
-        )
-      );
+      
+      if (updatedGuest) {
+        // Update local state
+        setGuests(prevGuests => 
+          prevGuests.map(guest => 
+            guest.id === guestId 
+              ? { 
+                  ...guest, 
+                  checkedIn: newStatus,
+                  checkInTime: newStatus ? new Date() : null
+                }
+              : guest
+          )
+        );
+      }
     } catch (error) {
       console.error('Error updating guest:', error);
     }

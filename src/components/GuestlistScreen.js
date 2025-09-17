@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { saveGuests, loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
+import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [searchTerm, setSearchTerm] = useState('');
