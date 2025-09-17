@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 const GuestlistScreen = ({ onLogout, onNavigate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter] = useState('All');
+  const [showGuestModal, setShowGuestModal] = useState(false);
+  const [editingGuest, setEditingGuest] = useState(null);
+  const [guestForm, setGuestForm] = useState({ name: '', price: '' });
   
   // Sample guest data with state management - all start unchecked
   const [guests, setGuests] = useState([
@@ -29,6 +32,61 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
           : guest
       )
     );
+  };
+
+  const handleAddGuest = () => {
+    setEditingGuest(null);
+    setGuestForm({ name: '', price: '' });
+    setShowGuestModal(true);
+  };
+
+  const handleEditGuest = (guest) => {
+    setEditingGuest(guest);
+    setGuestForm({ name: guest.name, price: guest.price });
+    setShowGuestModal(true);
+  };
+
+  const handleSaveGuest = () => {
+    if (!guestForm.name.trim() || !guestForm.price.trim()) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    if (editingGuest) {
+      // Edit existing guest
+      setGuests(prevGuests =>
+        prevGuests.map(guest =>
+          guest.id === editingGuest.id
+            ? { ...guest, name: guestForm.name, price: guestForm.price }
+            : guest
+        )
+      );
+    } else {
+      // Add new guest
+      const newGuest = {
+        id: Date.now(), // Simple ID generation
+        name: guestForm.name,
+        price: guestForm.price,
+        checkedIn: false
+      };
+      setGuests(prevGuests => [...prevGuests, newGuest]);
+    }
+
+    setShowGuestModal(false);
+    setEditingGuest(null);
+    setGuestForm({ name: '', price: '' });
+  };
+
+  const handleDeleteGuest = (guestId) => {
+    if (window.confirm('Are you sure you want to delete this guest?')) {
+      setGuests(prevGuests => prevGuests.filter(guest => guest.id !== guestId));
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowGuestModal(false);
+    setEditingGuest(null);
+    setGuestForm({ name: '', price: '' });
   };
 
   const filteredGuests = guests.filter(guest => 
@@ -71,7 +129,7 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
         </div>
         
         <div className="action-buttons">
-          <button className="add-guest-btn">
+          <button className="add-guest-btn" onClick={handleAddGuest}>
             <i className="fas fa-plus"></i>
             Add / Edit Guest
           </button>
@@ -90,13 +148,29 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
               <span className="guest-name">{guest.name}</span>
               <span className="guest-price">{guest.price}</span>
             </div>
-            <button 
-              className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
-              onClick={() => handleCheckIn(guest.id)}
-            >
-              <i className="fas fa-check"></i>
-              {guest.checkedIn ? 'Checked' : 'Check In'}
-            </button>
+            <div className="guest-actions">
+              <button 
+                className="edit-btn"
+                onClick={() => handleEditGuest(guest)}
+                title="Edit Guest"
+              >
+                <i className="fas fa-edit"></i>
+              </button>
+              <button 
+                className="delete-btn"
+                onClick={() => handleDeleteGuest(guest.id)}
+                title="Delete Guest"
+              >
+                <i className="fas fa-trash"></i>
+              </button>
+              <button 
+                className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
+                onClick={() => handleCheckIn(guest.id)}
+              >
+                <i className="fas fa-check"></i>
+                {guest.checkedIn ? 'Checked' : 'Check In'}
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -116,6 +190,50 @@ const GuestlistScreen = ({ onLogout, onNavigate }) => {
           <span>Profile</span>
         </div>
       </div>
+
+      {/* Guest Modal */}
+      {showGuestModal && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{editingGuest ? 'Edit Guest' : 'Add New Guest'}</h3>
+              <button className="close-btn" onClick={handleCloseModal}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label htmlFor="guestName">Guest Name</label>
+                <input
+                  id="guestName"
+                  type="text"
+                  value={guestForm.name}
+                  onChange={(e) => setGuestForm({ ...guestForm, name: e.target.value })}
+                  placeholder="Enter guest name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="guestPrice">Price</label>
+                <input
+                  id="guestPrice"
+                  type="text"
+                  value={guestForm.price}
+                  onChange={(e) => setGuestForm({ ...guestForm, price: e.target.value })}
+                  placeholder="e.g., 100 kr"
+                />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="cancel-btn" onClick={handleCloseModal}>
+                Cancel
+              </button>
+              <button className="save-btn" onClick={handleSaveGuest}>
+                {editingGuest ? 'Update Guest' : 'Add Guest'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
