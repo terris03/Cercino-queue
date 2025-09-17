@@ -541,6 +541,27 @@ code {
   box-shadow: none;
 }
 
+.clear-guests-btn {
+  background: linear-gradient(135deg, #ff4757 0%, #c44569 100%);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-guests-btn:hover {
+  background: linear-gradient(135deg, #e53e3e 0%, #b03a5a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3);
+}
+
 .guest-list {
   position: fixed;
   top: 80px;

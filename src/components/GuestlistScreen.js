@@ -357,6 +357,26 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     }
   };
 
+  const handleClearGuests = () => {
+    if (window.confirm('Are you sure you want to clear all guests? This cannot be undone.')) {
+      try {
+        // Clear from localStorage
+        const allGuests = loadGuests();
+        const otherRoomGuests = allGuests.filter(g => g.roomCode !== roomCode);
+        localStorage.setItem('cercino-guests', JSON.stringify(otherRoomGuests));
+        
+        // Clear from state
+        setGuests([]);
+        
+        console.log('Guest list cleared for room:', roomCode);
+        alert('Guest list cleared successfully!');
+      } catch (error) {
+        console.error('Error clearing guests:', error);
+        alert('Error clearing guests. Please try again.');
+      }
+    }
+  };
+
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -464,11 +484,15 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           <div className="action-buttons">
             <button className="add-guest-btn" onClick={handleAddGuest}>
               <i className="fas fa-plus"></i>
-              Add / Edit Guest
+              Edit Guest
             </button>
             <button className="import-csv-btn" onClick={handleCSVImport} disabled={importing}>
               <i className={`fas ${importing ? 'fa-spinner fa-spin' : 'fa-upload'}`}></i>
               {importing ? 'Importing...' : 'Import CSV'}
+            </button>
+            <button className="clear-guests-btn" onClick={handleClearGuests}>
+              <i className="fas fa-trash"></i>
+              Clear All
             </button>
           </div>
         </div>
