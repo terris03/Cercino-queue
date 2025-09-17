@@ -11,6 +11,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [roomCode, setRoomCode] = useState('1515');
   const [guests, setGuests] = useState([]);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const handleLogin = (code) => {
     setRoomCode(code);
@@ -31,6 +32,10 @@ function App() {
 
   const handleGuestsUpdate = (updatedGuests) => {
     setGuests(updatedGuests);
+  };
+
+  const handleThemeToggle = () => {
+    setIsDarkMode(!isDarkMode);
   };
 
   const renderScreen = () => {
@@ -63,7 +68,7 @@ function App() {
         return (
           <div className="screen active">
             <div className="screen-content">
-              <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} />
+              <ProfileScreen onLogout={handleLogout} onNavigate={handleNavigation} roomCode={roomCode} isDarkMode={isDarkMode} onThemeToggle={handleThemeToggle} />
             </div>
           </div>
         );
@@ -73,7 +78,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <div className="screen-container">
         {renderScreen()}
         {isLoggedIn && (

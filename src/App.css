@@ -1,3 +1,28 @@
+/* Theme Variables */
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --accent-primary: #ff6b9d;
+  --accent-secondary: #c44569;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.05);
+}
+
+.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --accent-primary: #007bff;
+  --accent-secondary: #0056b3;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --card-bg: rgba(0, 0, 0, 0.05);
+}
+
 /* Global Styles */
 * {
   margin: 0;
@@ -10,13 +35,14 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  color: var(--text-primary);
   overflow-x: hidden;
   max-width: 100vw;
   height: 100vh;
   position: fixed;
   width: 100%;
+  transition: all 0.3s ease;
 }
 
 code {
@@ -734,8 +760,8 @@ code {
 /* Statistics Screen */
 .statistics-screen {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  color: var(--text-primary);
   padding: 20px;
 }
 
@@ -748,7 +774,7 @@ code {
   font-size: 28px;
   font-weight: 600;
   margin: 0;
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -797,14 +823,14 @@ code {
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
@@ -860,7 +886,7 @@ code {
 
 .stat-content h3 {
   font-size: 10px;
-  color: #888;
+  color: var(--text-secondary);
   margin: 0 0 2px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -871,7 +897,7 @@ code {
   font-size: 16px;
   font-weight: 700;
   margin: 0;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
@@ -887,11 +913,11 @@ code {
 }
 
 .chart-section {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 25px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .chart-header {
@@ -919,7 +945,7 @@ code {
 .chart-content h2 {
   font-size: 20px;
   margin: 0 0 8px 0;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .progress-info {
@@ -930,19 +956,19 @@ code {
 
 .progress-label {
   font-size: 14px;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .progress-percentage {
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .progress-bar {
   width: 100%;
   height: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-color);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 15px;
@@ -950,7 +976,7 @@ code {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   border-radius: 6px;
   transition: width 0.5s ease;
 }
@@ -964,11 +990,11 @@ code {
 
 /* Fluid Diagram */
 .fluid-diagram-section {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 15px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   margin-top: 15px;
   width: 100%;
 }
@@ -984,7 +1010,7 @@ code {
 .fluid-diagram-section h2 {
   font-size: 16px;
   margin: 0 0 15px 0;
-  color: #ffffff;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -1013,7 +1039,7 @@ code {
 }
 
 .fluid-box {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 12px;
   display: flex;
@@ -1059,7 +1085,7 @@ code {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
@@ -1092,12 +1118,12 @@ code {
 .fluid-number {
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .fluid-label {
   font-size: 10px;
-  color: #888;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -1115,7 +1141,7 @@ code {
 }
 
 .fluid-arrow {
-  color: #888;
+  color: var(--text-secondary);
   font-size: 16px;
   display: flex;
   align-items: center;

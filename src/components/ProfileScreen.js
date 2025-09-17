@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-const ProfileScreen = ({ onLogout, onNavigate, roomCode }) => {
+const ProfileScreen = ({ onLogout, onNavigate, roomCode, isDarkMode, onThemeToggle }) => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const handleChangePassword = () => {
     if (currentPassword !== '1515') {
@@ -32,9 +31,7 @@ const ProfileScreen = ({ onLogout, onNavigate, roomCode }) => {
   };
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    // In a real app, this would update the global theme
-    alert(`Theme changed to ${isDarkMode ? 'Light' : 'Dark'} mode`);
+    onThemeToggle();
   };
 
   return (
