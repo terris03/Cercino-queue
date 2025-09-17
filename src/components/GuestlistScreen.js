@@ -5,7 +5,8 @@ import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpdate }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter] = useState('All');
+  const [filter, setFilter] = useState('All');
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [showGuestModal, setShowGuestModal] = useState(false);
   const [editingGuest, setEditingGuest] = useState(null);
   const [guestForm, setGuestForm] = useState({ name: '', price: '' });
@@ -529,9 +530,35 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
     }
   };
 
-  const filteredGuests = guests.filter(guest => 
-    guest.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredGuests = guests.filter(guest => {
+    const matchesSearch = guest.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    switch (filter) {
+      case 'All':
+        return matchesSearch;
+      case 'Checked In':
+        return matchesSearch && guest.checkedIn;
+      case 'Not Checked In':
+        return matchesSearch && !guest.checkedIn;
+      case 'Alphabetic Order':
+        return matchesSearch;
+      case 'Amount':
+        return matchesSearch;
+      default:
+        return matchesSearch;
+    }
+  }).sort((a, b) => {
+    switch (filter) {
+      case 'Alphabetic Order':
+        return a.name.localeCompare(b.name);
+      case 'Amount':
+        const priceA = parseFloat(a.price?.replace(/[^\d.]/g, '')) || 0;
+        const priceB = parseFloat(b.price?.replace(/[^\d.]/g, '')) || 0;
+        return priceB - priceA; // Highest amount first
+      default:
+        return 0; // No sorting for other filters
+    }
+  });
 
   return (
     <div className="guestlist-screen">
@@ -559,11 +586,66 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="filter-btn">
-              <i className="fas fa-filter"></i>
-              <span>{filter}</span>
-              <i className="fas fa-chevron-down"></i>
-            </button>
+            <div className="filter-container">
+              <button 
+                className="filter-btn"
+                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+              >
+                <i className="fas fa-filter"></i>
+                <span>{filter}</span>
+                <i className="fas fa-chevron-down"></i>
+              </button>
+              
+              {showFilterDropdown && (
+                <div className="filter-dropdown">
+                  <div 
+                    className="filter-option"
+                    onClick={() => {
+                      setFilter('All');
+                      setShowFilterDropdown(false);
+                    }}
+                  >
+                    All
+                  </div>
+                  <div 
+                    className="filter-option"
+                    onClick={() => {
+                      setFilter('Checked In');
+                      setShowFilterDropdown(false);
+                    }}
+                  >
+                    Checked In
+                  </div>
+                  <div 
+                    className="filter-option"
+                    onClick={() => {
+                      setFilter('Not Checked In');
+                      setShowFilterDropdown(false);
+                    }}
+                  >
+                    Not Checked In
+                  </div>
+                  <div 
+                    className="filter-option"
+                    onClick={() => {
+                      setFilter('Alphabetic Order');
+                      setShowFilterDropdown(false);
+                    }}
+                  >
+                    Alphabetic Order
+                  </div>
+                  <div 
+                    className="filter-option"
+                    onClick={() => {
+                      setFilter('Amount');
+                      setShowFilterDropdown(false);
+                    }}
+                  >
+                    Amount
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="action-buttons">

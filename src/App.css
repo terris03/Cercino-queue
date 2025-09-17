@@ -23,6 +23,86 @@
   --card-bg: rgba(0, 0, 0, 0.05);
 }
 
+.light-theme body {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%) !important;
+  color: #212529 !important;
+}
+
+.light-theme .statistics-screen {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  color: #212529 !important;
+}
+
+.light-theme .screen-header h1 {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.light-theme .stat-card {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-theme .stat-content h3 {
+  color: #6c757d !important;
+}
+
+.light-theme .stat-number {
+  color: #212529 !important;
+}
+
+.light-theme .chart-section {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-theme .chart-content h2 {
+  color: #212529 !important;
+}
+
+.light-theme .progress-label {
+  color: #6c757d !important;
+}
+
+.light-theme .progress-percentage {
+  color: #212529 !important;
+}
+
+.light-theme .progress-fill {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+.light-theme .fluid-diagram-section {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-theme .fluid-diagram-section h2 {
+  color: #212529 !important;
+}
+
+.light-theme .fluid-box {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.light-theme .fluid-icon {
+  color: #212529 !important;
+}
+
+.light-theme .fluid-number {
+  color: #212529 !important;
+}
+
+.light-theme .fluid-label {
+  color: #6c757d !important;
+}
+
+.light-theme .fluid-arrow {
+  color: #6c757d !important;
+}
+
 /* Global Styles */
 * {
   margin: 0;
@@ -487,6 +567,10 @@ code {
   color: rgba(255, 255, 255, 0.5);
 }
 
+.filter-container {
+  position: relative;
+}
+
 .filter-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -505,6 +589,45 @@ code {
 
 .filter-btn:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 150px;
+  z-index: 1000;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.filter-option {
+  padding: 8px 16px;
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .filter-dropdown {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-theme .filter-option {
+  color: #212529 !important;
+}
+
+.light-theme .filter-option:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
 }
 
 .action-buttons {
