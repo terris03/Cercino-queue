@@ -26,13 +26,13 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     setGuests(localGuests);
     setLoading(false);
     
-    // Set up Firebase real-time listener
+    // Set up Firebase real-time listener with custom database
     try {
       const guestsRef = collection(db, 'guests');
       const q = query(guestsRef, where('roomCode', '==', roomCode));
       
       const unsubscribe = onSnapshot(q, (snapshot) => {
-        console.log('Firebase real-time update received');
+        console.log('Firebase real-time update received from cercino-db');
         const firebaseGuests = [];
         snapshot.forEach((doc) => {
           firebaseGuests.push({ id: doc.id, ...doc.data() });
@@ -80,7 +80,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           checkedIn: !guest.checkedIn,
           lastUpdated: new Date()
         });
-        console.log('Guest check-in updated in Firebase:', guest.name, !guest.checkedIn);
+        console.log('Guest check-in updated in Firebase cercino-db:', guest.name, !guest.checkedIn);
       } catch (firebaseError) {
         console.error('Firebase update failed, using localStorage:', firebaseError);
         
@@ -130,7 +130,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
             price: guestForm.price.trim(),
             lastUpdated: new Date()
           });
-          console.log('Guest updated in Firebase:', guestForm.name.trim());
+          console.log('Guest updated in Firebase cercino-db:', guestForm.name.trim());
         } catch (firebaseError) {
           console.error('Firebase update failed, using localStorage:', firebaseError);
           
@@ -156,7 +156,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
             createdAt: new Date(),
             lastUpdated: new Date()
           });
-          console.log('Guest added to Firebase:', guestForm.name.trim());
+          console.log('Guest added to Firebase cercino-db:', guestForm.name.trim());
         } catch (firebaseError) {
           console.error('Firebase add failed, using localStorage:', firebaseError);
           
@@ -196,7 +196,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         // Delete from Firebase
         try {
           await deleteDoc(doc(db, 'guests', guestId));
-          console.log('Guest deleted from Firebase:', guest.name);
+          console.log('Guest deleted from Firebase cercino-db:', guest.name);
         } catch (firebaseError) {
           console.error('Firebase delete failed, using localStorage:', firebaseError);
           
@@ -421,7 +421,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         });
         
         await batch.commit();
-        console.log(`Successfully imported ${newGuests.length} guests to Firebase!`);
+        console.log(`Successfully imported ${newGuests.length} guests to Firebase cercino-db!`);
         alert(`Successfully imported ${newGuests.length} guests!`);
       } catch (firebaseError) {
         console.error('Firebase batch import failed, using localStorage:', firebaseError);
