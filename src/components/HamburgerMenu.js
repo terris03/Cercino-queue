@@ -20,10 +20,10 @@ const HamburgerMenu = ({ onNavigate, currentScreen, onLogout }) => {
   return (
     <>
       {/* Hamburger Button */}
-      <div className="hamburger-button" onClick={toggleMenu}>
-        <div className={`hamburger-line ${isOpen ? 'active' : ''}`}></div>
-        <div className={`hamburger-line ${isOpen ? 'active' : ''}`}></div>
-        <div className={`hamburger-line ${isOpen ? 'active' : ''}`}></div>
+      <div className={`hamburger-button ${isOpen ? 'hidden' : ''}`} onClick={toggleMenu}>
+        <div className="hamburger-line"></div>
+        <div className="hamburger-line"></div>
+        <div className="hamburger-line"></div>
       </div>
 
       {/* Overlay */}
