@@ -155,13 +155,33 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       const line = lines[i].trim();
       if (!line) continue;
       
+      // Skip header row if it contains "name" or "firstname"
+      if (i === 0 && (line.toLowerCase().includes('name') || line.toLowerCase().includes('firstname'))) {
+        continue;
+      }
+      
       // Split by comma, handle quoted values
       const values = line.split(',').map(val => val.trim().replace(/^"|"$/g, ''));
       
       if (values.length >= 2) {
+        // Handle different CSV formats:
+        // Format 1: "Firstname, Lastname, Price" (3 columns)
+        // Format 2: "Full Name, Price" (2 columns)
+        let name, price;
+        
+        if (values.length >= 3) {
+          // Format 1: Firstname, Lastname, Price
+          name = `${values[0]} ${values[1]}`.trim();
+          price = values[2] || '100 kr';
+        } else {
+          // Format 2: Full Name, Price
+          name = values[0] || `Guest ${i + 1}`;
+          price = values[1] || '100 kr';
+        }
+        
         guests.push({
-          name: values[0] || `Guest ${i + 1}`,
-          price: values[1] || '100 kr',
+          name: name,
+          price: price,
           checkedIn: false,
           roomCode: roomCode,
           createdAt: new Date(),
@@ -195,10 +215,13 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
 
     try {
       const text = await file.text();
+      console.log('CSV content:', text); // Debug log
+      
       const newGuests = parseCSV(text);
+      console.log('Parsed guests:', newGuests); // Debug log
 
       if (newGuests.length === 0) {
-        alert('No valid guest data found in CSV file');
+        alert('No valid guest data found in CSV file. Please check the format:\n\nExpected formats:\n- "Full Name, Price" (2 columns)\n- "Firstname, Lastname, Price" (3 columns)');
         setImporting(false);
         return;
       }
@@ -217,7 +240,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       alert(`Successfully imported ${newGuests.length} guests!`);
     } catch (error) {
       console.error('Error importing CSV:', error);
-      alert('Error importing CSV file. Please check the format and try again.');
+      alert(`Error importing CSV file: ${error.message}\n\nPlease check the format and try again.`);
     } finally {
       setImporting(false);
     }
