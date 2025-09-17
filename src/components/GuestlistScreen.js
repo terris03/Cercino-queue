@@ -25,6 +25,8 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         id: doc.id,
         ...doc.data()
       }));
+      console.log('Loaded guests:', guestsData.length);
+      console.log('First few guests:', guestsData.slice(0, 3));
       setGuests(guestsData);
       setLoading(false);
     }, (error) => {
@@ -376,7 +378,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           >
             <div className="guest-info">
               <span className="guest-name">{guest.name}</span>
-              <span className="guest-price">{guest.price}</span>
+              <span className="guest-price">{guest.price || 'No price'}</span>
             </div>
             <div className="guest-actions">
               <button 
