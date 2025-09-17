@@ -151,12 +151,17 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     const lines = csvText.split('\n');
     const guests = [];
     
+    console.log('Total lines in CSV:', lines.length);
+    
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
       
+      console.log(`Processing line ${i}:`, line);
+      
       // Skip header row if it contains "name" or "firstname" or "billing"
       if (i === 0 && (line.toLowerCase().includes('name') || line.toLowerCase().includes('firstname') || line.toLowerCase().includes('billing'))) {
+        console.log('Skipping header row');
         continue;
       }
       
@@ -181,6 +186,8 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
       // Clean up values (remove quotes)
       const cleanValues = values.map(val => val.replace(/^"|"$/g, ''));
       
+      console.log('Parsed values:', cleanValues);
+      
       if (cleanValues.length >= 3) {
         // Format: "Firstname, Lastname, Price" (3 columns)
         const firstName = cleanValues[0] || '';
@@ -198,6 +205,8 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
             formattedPrice = `${Math.round(numPrice)} kr`;
           }
         }
+        
+        console.log('Creating guest:', { name: fullName, price: formattedPrice });
         
         guests.push({
           name: fullName,
@@ -220,6 +229,8 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           }
         }
         
+        console.log('Creating guest:', { name, price });
+        
         guests.push({
           name: name,
           price: price,
@@ -228,9 +239,12 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           createdAt: new Date(),
           lastUpdated: new Date()
         });
+      } else {
+        console.log('Skipping line - not enough columns:', cleanValues);
       }
     }
     
+    console.log('Total guests parsed:', guests.length);
     return guests;
   };
 
@@ -256,13 +270,14 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
 
     try {
       const text = await file.text();
-      console.log('CSV content:', text); // Debug log
+      console.log('CSV content (first 500 chars):', text.substring(0, 500)); // Debug log
       
       const newGuests = parseCSV(text);
-      console.log('Parsed guests:', newGuests); // Debug log
+      console.log('Parsed guests count:', newGuests.length); // Debug log
+      console.log('First few parsed guests:', newGuests.slice(0, 3)); // Debug log
 
       if (newGuests.length === 0) {
-        alert('No valid guest data found in CSV file. Please check the format:\n\nExpected formats:\n- "Full Name, Price" (2 columns)\n- "Firstname, Lastname, Price" (3 columns)');
+        alert('No valid guest data found in CSV file. Please check the format:\n\nExpected formats:\n- "Full Name, Price" (2 columns)\n- "Firstname, Lastname, Price" (3 columns)\n\nMake sure your CSV has data rows after the header.');
         setImporting(false);
         return;
       }
