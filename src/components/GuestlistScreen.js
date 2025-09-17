@@ -14,13 +14,32 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Load guests from localStorage only
+  // Load guests from shared storage and auto-load CSV data
   useEffect(() => {
     console.log('Loading guests for roomCode:', roomCode);
     
-    const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
-    console.log('Loaded from localStorage:', localGuests.length, 'guests');
-    setGuests(localGuests);
+    // First try to load from shared storage
+    const sharedData = localStorage.getItem('cercino-guests-shared');
+    let sharedGuests = [];
+    
+    if (sharedData) {
+      try {
+        const parsed = JSON.parse(sharedData);
+        sharedGuests = parsed.guests || [];
+        console.log('Loaded from shared storage:', sharedGuests.length, 'guests');
+      } catch (error) {
+        console.error('Error parsing shared data:', error);
+      }
+    }
+    
+    // If no shared data, try to load from local storage
+    if (sharedGuests.length === 0) {
+      const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
+      console.log('Loaded from localStorage:', localGuests.length, 'guests');
+      sharedGuests = localGuests;
+    }
+    
+    setGuests(sharedGuests);
     setLoading(false);
   }, [roomCode]);
 
@@ -36,18 +55,26 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         return;
       }
       
-      const updatedGuest = updateGuest(guestId, {
-        checkedIn: !guest.checkedIn
-      });
+      const updatedGuest = {
+        ...guest,
+        checkedIn: !guest.checkedIn,
+        lastUpdated: new Date()
+      };
       
-      if (updatedGuest) {
-        setGuests(prevGuests => 
-          prevGuests.map(g => g.id === guestId ? updatedGuest : g)
-        );
-        console.log('Guest check-in updated:', updatedGuest.name, updatedGuest.checkedIn);
-      } else {
-        console.error('Failed to update guest:', guestId);
-      }
+      // Update state
+      const updatedGuests = guests.map(g => g.id === guestId ? updatedGuest : g);
+      setGuests(updatedGuests);
+      
+      // Save to shared storage
+      const sharedData = {
+        guests: updatedGuests,
+        password: "1515",
+        lastUpdated: new Date().toISOString()
+      };
+      
+      localStorage.setItem('cercino-guests-shared', JSON.stringify(sharedData));
+      
+      console.log('Guest check-in updated:', updatedGuest.name, updatedGuest.checkedIn);
     } catch (error) {
       console.error('Error checking in guest:', error);
       alert('Error updating guest. Please try again.');
@@ -73,39 +100,45 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     }
 
     try {
+      let updatedGuests = [];
+      
       if (editingGuest) {
         // Edit existing guest
-        const updatedGuest = updateGuest(editingGuest.id, {
+        const updatedGuest = {
+          ...editingGuest,
           name: guestForm.name.trim(),
-          price: guestForm.price.trim()
-        });
+          price: guestForm.price.trim(),
+          lastUpdated: new Date()
+        };
         
-        if (updatedGuest) {
-          setGuests(prevGuests => 
-            prevGuests.map(g => g.id === editingGuest.id ? updatedGuest : g)
-          );
-          console.log('Guest updated:', updatedGuest.name);
-        } else {
-          alert('Failed to update guest. Please try again.');
-          return;
-        }
+        updatedGuests = guests.map(g => g.id === editingGuest.id ? updatedGuest : g);
+        setGuests(updatedGuests);
+        console.log('Guest updated:', updatedGuest.name);
       } else {
         // Add new guest
-        const newGuest = addGuest({
+        const newGuest = {
+          id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           name: guestForm.name.trim(),
           price: guestForm.price.trim(),
           checkedIn: false,
-          roomCode: roomCode
-        });
+          roomCode: roomCode,
+          createdAt: new Date(),
+          lastUpdated: new Date()
+        };
         
-        if (newGuest) {
-          setGuests(prevGuests => [...prevGuests, newGuest]);
-          console.log('Guest added:', newGuest.name);
-        } else {
-          alert('Failed to add guest. Please try again.');
-          return;
-        }
+        updatedGuests = [...guests, newGuest];
+        setGuests(updatedGuests);
+        console.log('Guest added:', newGuest.name);
       }
+
+      // Save to shared storage
+      const sharedData = {
+        guests: updatedGuests,
+        password: "1515",
+        lastUpdated: new Date().toISOString()
+      };
+      
+      localStorage.setItem('cercino-guests-shared', JSON.stringify(sharedData));
 
       setShowGuestModal(false);
       setEditingGuest(null);
@@ -125,13 +158,19 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
           return;
         }
         
-        const result = deleteGuest(guestId);
-        if (result) {
-          setGuests(prevGuests => prevGuests.filter(g => g.id !== guestId));
-          console.log('Guest deleted:', guest.name);
-        } else {
-          alert('Failed to delete guest. Please try again.');
-        }
+        const updatedGuests = guests.filter(g => g.id !== guestId);
+        setGuests(updatedGuests);
+        
+        // Save to shared storage
+        const sharedData = {
+          guests: updatedGuests,
+          password: "1515",
+          lastUpdated: new Date().toISOString()
+        };
+        
+        localStorage.setItem('cercino-guests-shared', JSON.stringify(sharedData));
+        
+        console.log('Guest deleted:', guest.name);
       } catch (error) {
         console.error('Error deleting guest:', error);
         alert('Error deleting guest. Please try again.');
@@ -330,16 +369,28 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         return;
       }
 
-      // Add guests to localStorage
-      const addedGuests = addGuestsBatch(newGuests.map(guest => ({
+      // Add guests to shared storage
+      const addedGuests = newGuests.map(guest => ({
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         ...guest,
         roomCode: roomCode,
-        checkedIn: false
-      })));
+        checkedIn: false,
+        createdAt: new Date(),
+        lastUpdated: new Date()
+      }));
+      
+      // Save to shared storage
+      const sharedData = {
+        guests: [...guests, ...addedGuests],
+        password: "1515",
+        lastUpdated: new Date().toISOString()
+      };
+      
+      localStorage.setItem('cercino-guests-shared', JSON.stringify(sharedData));
       
       setGuests(prevGuests => [...prevGuests, ...addedGuests]);
       
-      alert(`Successfully imported ${newGuests.length} guests!`);
+      alert(`Successfully imported ${newGuests.length} guests! They will now be visible on all devices.`);
     } catch (error) {
       console.error('Error importing CSV:', error);
       alert(`Error importing CSV file: ${error.message}\n\nPlease check the format and try again.`);

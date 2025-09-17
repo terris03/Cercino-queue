@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const LoginScreen = ({ onLogin }) => {
-  const [roomNumber, setRoomNumber] = useState('123');
+  const [roomNumber, setRoomNumber] = useState('1515');
 
   const handleInputChange = (e) => {
     setRoomNumber(e.target.value);
@@ -9,9 +9,11 @@ const LoginScreen = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple validation - in real app, this would connect to authentication
-    if (roomNumber.trim()) {
+    // Password validation
+    if (roomNumber.trim() === '1515') {
       onLogin(roomNumber.trim());
+    } else {
+      alert('Invalid password. Please enter 1515');
     }
   };
 
