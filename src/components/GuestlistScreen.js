@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, writeBatch } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,38 +15,44 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Load guests from local storage
+  // Load guests from Firebase with real-time updates
   useEffect(() => {
-    const loadGuestsData = () => {
-      const guestsData = loadGuests().filter(guest => guest.roomCode === roomCode);
-      console.log('Loaded guests:', guestsData.length);
-      console.log('First few guests:', guestsData.slice(0, 3));
+    const guestsRef = collection(db, 'guests');
+    const q = query(guestsRef, where('roomCode', '==', roomCode), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const guestsData = [];
+      snapshot.forEach((doc) => {
+        guestsData.push({ id: doc.id, ...doc.data() });
+      });
+      console.log('Loaded guests from Firebase:', guestsData.length);
       setGuests(guestsData);
       setLoading(false);
-    };
+    }, (error) => {
+      console.error('Error loading guests:', error);
+      setLoading(false);
+    });
 
-    loadGuestsData();
+    return () => unsubscribe();
   }, [roomCode]);
 
   const totalGuests = guests.length;
   const checkedInCount = guests.filter(guest => guest.checkedIn).length;
   const remainingGuests = totalGuests - checkedInCount;
 
-  const handleCheckIn = (guestId) => {
+  const handleCheckIn = async (guestId) => {
     try {
       const guest = guests.find(g => g.id === guestId);
-      const updatedGuest = updateGuest(guestId, {
-        checkedIn: !guest.checkedIn
+      const guestRef = doc(db, 'guests', guestId);
+      
+      await updateDoc(guestRef, {
+        checkedIn: !guest.checkedIn,
+        lastUpdated: new Date()
       });
       
-      if (updatedGuest) {
-        // Update local state
-        setGuests(prevGuests => 
-          prevGuests.map(g => g.id === guestId ? updatedGuest : g)
-        );
-      }
+      // Firebase real-time listener will automatically update the state
     } catch (error) {
-      console.error('Error updating guest:', error);
+      console.error('Error checking in guest:', error);
     }
   };
 
@@ -61,7 +68,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     setShowGuestModal(true);
   };
 
-  const handleSaveGuest = () => {
+  const handleSaveGuest = async () => {
     if (!guestForm.name.trim() || !guestForm.price.trim()) {
       alert('Please fill in all fields');
       return;
@@ -70,45 +77,40 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
     try {
       if (editingGuest) {
         // Edit existing guest
-        const updatedGuest = updateGuest(editingGuest.id, {
+        const guestRef = doc(db, 'guests', editingGuest.id);
+        await updateDoc(guestRef, {
           name: guestForm.name,
-          price: guestForm.price
+          price: guestForm.price,
+          lastUpdated: new Date()
         });
-        
-        if (updatedGuest) {
-          // Update local state
-          setGuests(prevGuests => 
-            prevGuests.map(g => g.id === editingGuest.id ? updatedGuest : g)
-          );
-        }
       } else {
         // Add new guest
-        const newGuest = addGuest({
+        await addDoc(collection(db, 'guests'), {
           name: guestForm.name,
           price: guestForm.price,
           checkedIn: false,
-          roomCode: roomCode
+          roomCode: roomCode,
+          createdAt: new Date(),
+          lastUpdated: new Date()
         });
-        
-        // Update local state
-        setGuests(prevGuests => [...prevGuests, newGuest]);
       }
 
       setShowGuestModal(false);
       setEditingGuest(null);
       setGuestForm({ name: '', price: '' });
+      
+      // Firebase real-time listener will automatically update the state
     } catch (error) {
       console.error('Error saving guest:', error);
       alert('Error saving guest. Please try again.');
     }
   };
 
-  const handleDeleteGuest = (guestId) => {
+  const handleDeleteGuest = async (guestId) => {
     if (window.confirm('Are you sure you want to delete this guest?')) {
       try {
-        deleteGuest(guestId);
-        // Update local state
-        setGuests(prevGuests => prevGuests.filter(g => g.id !== guestId));
+        await deleteDoc(doc(db, 'guests', guestId));
+        // Firebase real-time listener will automatically update the state
       } catch (error) {
         console.error('Error deleting guest:', error);
         alert('Error deleting guest. Please try again.');
@@ -287,13 +289,24 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '123' }) => {
         return;
       }
 
-      // Add guests to local storage
-      const addedGuests = addGuestsBatch(newGuests);
+      // Add guests to Firebase using batch write
+      const batch = writeBatch(db);
       
-      // Update local state
-      setGuests(prevGuests => [...prevGuests, ...addedGuests]);
+      newGuests.forEach(guest => {
+        const guestRef = doc(collection(db, 'guests'));
+        batch.set(guestRef, {
+          ...guest,
+          roomCode: roomCode,
+          checkedIn: false,
+          createdAt: new Date(),
+          lastUpdated: new Date()
+        });
+      });
+      
+      await batch.commit();
       
       alert(`Successfully imported ${newGuests.length} guests!`);
+      // Firebase real-time listener will automatically update the state
     } catch (error) {
       console.error('Error importing CSV:', error);
       alert(`Error importing CSV file: ${error.message}\n\nPlease check the format and try again.`);
