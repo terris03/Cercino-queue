@@ -1461,6 +1461,7 @@ code {
   padding: 8px;
   background: transparent;
   z-index: 1;
+  height: calc(100vh - 80px);
 }
 
 .loading-indicator {
@@ -1968,37 +1969,9 @@ code {
   transform: translateY(-1px);
 }
 
-/* Bottom Navigation */
-.bottom-navigation {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #000000;
-  border-top: 2px solid #ff6b9d;
-  display: flex;
-  padding: 12px 20px;
-  z-index: 9999;
-  border-radius: 0;
-  height: 70px;
-  margin: 0;
-  width: 100%;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
-}
+/* Bottom Navigation - REMOVED */
 
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 8px;
-  margin: 0 2px;
-  color: #ffffff;
-}
+/* Navigation items removed */
 
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.08);
