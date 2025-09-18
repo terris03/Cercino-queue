@@ -563,13 +563,6 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
       
       // ONLY show guests whose name contains the search term
       matchesSearch = guestName.includes(searchValue);
-      
-      // Debug logging
-      console.log('🔍 Search Debug:', {
-        searchTerm: searchValue,
-        guestName: guestName,
-        matches: matchesSearch
-      });
     }
     
     // Apply filter
