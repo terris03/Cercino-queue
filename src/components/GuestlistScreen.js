@@ -9,7 +9,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [showGuestModal, setShowGuestModal] = useState(false);
   const [editingGuest, setEditingGuest] = useState(null);
-  const [guestForm, setGuestForm] = useState({ name: '', price: '' });
+  const [guestForm, setGuestForm] = useState({ name: '', price: '', tag: '' });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [guests, setGuests] = useState([]);
@@ -164,7 +164,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
 
   const handleEditGuest = (guest) => {
     setEditingGuest(guest);
-    setGuestForm({ name: guest.name, price: guest.price });
+    setGuestForm({ name: guest.name, price: guest.price, tag: guest.tag || '' });
     setShowGuestModal(true);
   };
 
@@ -183,6 +183,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
           ...editingGuest,
           name: guestForm.name.trim(),
           price: guestForm.price.trim(),
+          tag: guestForm.tag.trim(),
           lastUpdated: new Date()
         };
         
@@ -195,6 +196,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
           id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           name: guestForm.name.trim(),
           price: guestForm.price.trim(),
+          tag: guestForm.tag.trim(),
           checkedIn: false,
           roomCode: roomCode,
           createdAt: new Date(),
@@ -217,7 +219,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
 
       setShowGuestModal(false);
       setEditingGuest(null);
-      setGuestForm({ name: '', price: '' });
+      setGuestForm({ name: '', price: '', tag: '' });
     } catch (error) {
       console.error('Error saving guest:', error);
       alert('Error saving guest. Please try again.');
@@ -278,7 +280,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   };
 
   const handleSuggestionClick = (guest) => {
-    setGuestForm({ name: guest.name, price: guest.price });
+    setGuestForm({ name: guest.name, price: guest.price, tag: guest.tag || '' });
     setEditingGuest(guest);
     setShowSuggestions(false);
     setFilteredSuggestions([]);
@@ -717,6 +719,9 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
             <div className="guest-info">
               <span className="guest-name">{guest.name}</span>
               <span className="guest-price">{guest.price || 'No price'}</span>
+              {guest.tag && (
+                <span className="guest-tag">{guest.tag}</span>
+              )}
             </div>
             <div className="guest-actions">
               <button 
@@ -803,6 +808,17 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                   value={guestForm.price}
                   onChange={(e) => setGuestForm({ ...guestForm, price: e.target.value })}
                   placeholder="e.g., 100 kr"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="guestTag">Custom Tag</label>
+                <input
+                  id="guestTag"
+                  type="text"
+                  value={guestForm.tag}
+                  onChange={(e) => setGuestForm({ ...guestForm, tag: e.target.value })}
+                  placeholder="e.g., VIP, Staff, Press"
+                  className="tag-input"
                 />
               </div>
             </div>
