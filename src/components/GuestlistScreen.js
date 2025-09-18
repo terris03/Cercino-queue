@@ -102,11 +102,6 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
         return;
       }
       
-      // Clear search if the checked-in guest matches the current search
-      if (searchTerm && guest.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-        setSearchTerm('');
-        console.log('🔍 Cleared search term after check-in:', guest.name);
-      }
       
       console.log('🔥 Attempting to update guest check-in in Firebase...');
       console.log('🔥 Guest ID:', guestId);
@@ -536,6 +531,10 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
     }
   };
 
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
+
   const filteredGuests = guests.filter(guest => {
     const matchesSearch = guest.name.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -585,13 +584,23 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
         
         <div className="controls-section">
           <div className="search-section">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search guests..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="search-input-container">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search guests..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button 
+                  className="search-clear-btn"
+                  onClick={clearSearch}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
+            </div>
             <div className="filter-container">
               <button 
                 className="filter-btn"
