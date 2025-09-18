@@ -793,7 +793,21 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                       setSearchTerm(value);
                       
                       if (value.length > 0) {
-                        const suggestions = guests.filter(guest => 
+                        // Include current form data if editing a guest
+                        let searchableGuests = [...guests];
+                        
+                        // If editing an existing guest, temporarily update their name for search
+                        if (editingGuest && guestForm.name.trim()) {
+                          const updatedGuest = {
+                            ...editingGuest,
+                            name: guestForm.name.trim()
+                          };
+                          searchableGuests = searchableGuests.map(g => 
+                            g.id === editingGuest.id ? updatedGuest : g
+                          );
+                        }
+                        
+                        const suggestions = searchableGuests.filter(guest => 
                           guest.name.toLowerCase().includes(value.toLowerCase())
                         );
                         setFilteredSuggestions(suggestions);
