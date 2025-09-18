@@ -465,7 +465,7 @@ code {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a2a2a 100%);
+  background: transparent;
   overflow: hidden;
   position: fixed;
   top: 0;
