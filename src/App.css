@@ -1418,7 +1418,7 @@ code {
   top: 80px;
   left: 0;
   right: 0;
-  bottom: 80px;
+  bottom: 0;
   overflow-y: auto;
   padding: 8px;
   background: transparent;

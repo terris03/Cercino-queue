@@ -102,6 +102,12 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
         return;
       }
       
+      // Clear search if the checked-in guest matches the current search
+      if (searchTerm && guest.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        setSearchTerm('');
+        console.log('🔍 Cleared search term after check-in:', guest.name);
+      }
+      
       console.log('🔥 Attempting to update guest check-in in Firebase...');
       console.log('🔥 Guest ID:', guestId);
       console.log('🔥 Guest data:', guest);
