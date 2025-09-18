@@ -554,33 +554,25 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   };
 
   const filteredGuests = guests.filter(guest => {
-    // Robust search function for main guest list
+    // SIMPLE AND BULLETPROOF search function
     let matchesSearch = true;
     
     if (searchTerm.trim().length > 0) {
       const searchValue = searchTerm.trim().toLowerCase();
-      const guestName = guest.name?.toLowerCase() || '';
+      const guestName = (guest.name || '').toLowerCase();
       
-      // Exact match
-      if (guestName === searchValue) {
-        matchesSearch = true;
-      }
-      // Contains match
-      else if (guestName.includes(searchValue)) {
-        matchesSearch = true;
-      }
-      // Word boundary match (handles "Elias" finding "Elias Landälv")
-      else {
-        const words = guestName.split(/\s+/);
-        matchesSearch = words.some(word => word.includes(searchValue));
-      }
+      // ONLY show guests whose name contains the search term
+      matchesSearch = guestName.includes(searchValue);
+      
+      // Debug logging
+      console.log('🔍 Search Debug:', {
+        searchTerm: searchValue,
+        guestName: guestName,
+        matches: matchesSearch
+      });
     }
     
-    // Debug logging for filter
-    if (filter === 'Checked In') {
-      console.log('🔍 Filtering for Checked In:', guest.name, 'checkedIn:', guest.checkedIn, 'matchesSearch:', matchesSearch);
-    }
-    
+    // Apply filter
     switch (filter) {
       case 'All':
         return matchesSearch;
@@ -827,34 +819,15 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                           );
                         }
                         
-                        // Robust search function
+                        // SIMPLE AND BULLETPROOF search function
                         const suggestions = searchableGuests.filter(guest => {
                           if (!guest.name) return false;
                           
                           const searchTerm = value.toLowerCase();
                           const guestName = guest.name.toLowerCase();
                           
-                          // Exact match
-                          if (guestName === searchTerm) return true;
-                          
-                          // Contains match
-                          if (guestName.includes(searchTerm)) return true;
-                          
-                          // Word boundary match (handles "Elias" finding "Elias Landälv")
-                          const words = guestName.split(/\s+/);
-                          if (words.some(word => word.includes(searchTerm))) return true;
-                          
-                          // Fuzzy match for typos (simple version)
-                          if (searchTerm.length >= 3) {
-                            // Check if search term is contained in any part of the name
-                            for (let i = 0; i <= guestName.length - searchTerm.length; i++) {
-                              if (guestName.substring(i, i + searchTerm.length) === searchTerm) {
-                                return true;
-                              }
-                            }
-                          }
-                          
-                          return false;
+                          // ONLY show guests whose name contains the search term
+                          return guestName.includes(searchTerm);
                         });
                         
                         // Sort suggestions by relevance
