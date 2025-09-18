@@ -159,6 +159,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   const handleAddGuest = () => {
     setEditingGuest(null);
     setGuestForm({ name: '', price: '', tag: '' });
+    setSearchTerm('');
     setShowSuggestions(false);
     setFilteredSuggestions([]);
     setShowGuestModal(true);
@@ -167,6 +168,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   const handleEditGuest = (guest) => {
     setEditingGuest(guest);
     setGuestForm({ name: guest.name, price: guest.price, tag: guest.tag || '' });
+    setSearchTerm('');
     setShowSuggestions(false);
     setFilteredSuggestions([]);
     setShowGuestModal(true);
@@ -224,6 +226,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
       setShowGuestModal(false);
       setEditingGuest(null);
       setGuestForm({ name: '', price: '', tag: '' });
+      setSearchTerm('');
     } catch (error) {
       console.error('Error saving guest:', error);
       alert('Error saving guest. Please try again.');
@@ -286,6 +289,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   const handleSuggestionClick = (guest) => {
     setGuestForm({ name: guest.name, price: guest.price, tag: guest.tag || '' });
     setEditingGuest(guest);
+    setSearchTerm(''); // Clear the search field
     setShowSuggestions(false);
     setFilteredSuggestions([]);
   };
@@ -778,18 +782,17 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label htmlFor="guestName">Guest Name</label>
+                <label htmlFor="guestSearch">Search Existing Guest</label>
                 <div className="input-with-suggestions">
                   <input
-                    id="guestName"
+                    id="guestSearch"
                     type="text"
-                    value={guestForm.name}
+                    value={searchTerm}
                     onChange={(e) => {
                       const value = e.target.value;
-                      setGuestForm({ ...guestForm, name: value });
+                      setSearchTerm(value);
                       
-                      // Show suggestions only if not editing an existing guest
-                      if (!editingGuest && value.length > 0) {
+                      if (value.length > 0) {
                         const suggestions = guests.filter(guest => 
                           guest.name.toLowerCase().includes(value.toLowerCase())
                         );
@@ -800,7 +803,7 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                         setFilteredSuggestions([]);
                       }
                     }}
-                    placeholder="Enter or search guest name"
+                    placeholder="Search for existing guest..."
                     autoComplete="off"
                   />
                   {showSuggestions && (
@@ -818,6 +821,17 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                     </div>
                   )}
                 </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="guestName">Guest Name</label>
+                <input
+                  id="guestName"
+                  type="text"
+                  value={guestForm.name}
+                  onChange={(e) => setGuestForm({ ...guestForm, name: e.target.value })}
+                  placeholder="Enter guest name"
+                  autoComplete="off"
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="guestPrice">Price</label>
