@@ -158,13 +158,17 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
 
   const handleAddGuest = () => {
     setEditingGuest(null);
-    setGuestForm({ name: '', price: '' });
+    setGuestForm({ name: '', price: '', tag: '' });
+    setShowSuggestions(false);
+    setFilteredSuggestions([]);
     setShowGuestModal(true);
   };
 
   const handleEditGuest = (guest) => {
     setEditingGuest(guest);
     setGuestForm({ name: guest.name, price: guest.price, tag: guest.tag || '' });
+    setShowSuggestions(false);
+    setFilteredSuggestions([]);
     setShowGuestModal(true);
   };
 
@@ -780,8 +784,23 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                     id="guestName"
                     type="text"
                     value={guestForm.name}
-                    onChange={handleGuestNameChange}
-                    placeholder="Enter guest name"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setGuestForm({ ...guestForm, name: value });
+                      
+                      // Show suggestions only if not editing an existing guest
+                      if (!editingGuest && value.length > 0) {
+                        const suggestions = guests.filter(guest => 
+                          guest.name.toLowerCase().includes(value.toLowerCase())
+                        );
+                        setFilteredSuggestions(suggestions);
+                        setShowSuggestions(suggestions.length > 0);
+                      } else {
+                        setShowSuggestions(false);
+                        setFilteredSuggestions([]);
+                      }
+                    }}
+                    placeholder="Enter or search guest name"
                     autoComplete="off"
                   />
                   {showSuggestions && (
