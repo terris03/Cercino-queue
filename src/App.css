@@ -1459,7 +1459,7 @@ code {
   bottom: 0;
   overflow-y: auto;
   padding: 8px;
-  background: transparent;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2d2d2d 100%);
   z-index: 1;
   height: calc(100vh - 80px);
 }
@@ -2353,6 +2353,7 @@ code {
     top: 70px;
     bottom: 0;
     padding: 6px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2d2d2d 100%);
   }
   
   .guestlist-header-integrated {
