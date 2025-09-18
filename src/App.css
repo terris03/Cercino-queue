@@ -1460,6 +1460,7 @@ code {
   overflow-y: auto;
   padding: 8px;
   background: transparent;
+  z-index: 1;
 }
 
 .loading-indicator {

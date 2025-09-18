@@ -91,8 +91,16 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   }, [roomCode]);
 
   const totalGuests = guests.length;
-  const checkedInCount = guests.filter(guest => guest.checkedIn).length;
+  const checkedInCount = guests.filter(guest => guest.checkedIn === true).length;
   const remainingGuests = totalGuests - checkedInCount;
+  
+  // Debug logging
+  console.log('📊 Guest stats:', {
+    totalGuests,
+    checkedInCount,
+    remainingGuests,
+    guests: guests.map(g => ({ name: g.name, checkedIn: g.checkedIn }))
+  });
 
   const handleCheckIn = async (guestId) => {
     try {
@@ -538,13 +546,18 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   const filteredGuests = guests.filter(guest => {
     const matchesSearch = guest.name.toLowerCase().includes(searchTerm.toLowerCase());
     
+    // Debug logging for filter
+    if (filter === 'Checked In') {
+      console.log('🔍 Filtering for Checked In:', guest.name, 'checkedIn:', guest.checkedIn, 'matchesSearch:', matchesSearch);
+    }
+    
     switch (filter) {
       case 'All':
         return matchesSearch;
       case 'Checked In':
-        return matchesSearch && guest.checkedIn;
+        return matchesSearch && guest.checkedIn === true;
       case 'Not Checked In':
-        return matchesSearch && !guest.checkedIn;
+        return matchesSearch && guest.checkedIn !== true;
       case 'Alphabetic Order':
         return matchesSearch;
       case 'Amount':
