@@ -50,6 +50,18 @@ const HamburgerMenu = ({ onNavigate, currentScreen, onLogout }) => {
               {currentScreen === 'statistics' && <div className="active-indicator"></div>}
             </div>
             
+            <div className="menu-item" onClick={() => handleNavigation('createevent')}>
+              <i className="fas fa-plus-circle"></i>
+              <span>Create Event</span>
+              {currentScreen === 'createevent' && <div className="active-indicator"></div>}
+            </div>
+            
+            <div className="menu-item" onClick={() => handleNavigation('shop')}>
+              <i className="fas fa-store"></i>
+              <span>Shop</span>
+              {currentScreen === 'shop' && <div className="active-indicator"></div>}
+            </div>
+            
             <div className="menu-item" onClick={() => handleNavigation('profile')}>
               <i className="fas fa-user"></i>
               <span>Profile</span>

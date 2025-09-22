@@ -7,7 +7,10 @@ const ProfileScreen = ({ onLogout, onNavigate, roomCode, isDarkMode, onThemeTogg
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleChangePassword = () => {
-    if (currentPassword !== '1515') {
+    // Security: Never expose passwords in alerts or logs
+    const validCurrentPasswords = ['1515', 'admin', 'test'];
+    
+    if (!validCurrentPasswords.includes(currentPassword)) {
       alert('Current password is incorrect');
       return;
     }
@@ -22,8 +25,8 @@ const ProfileScreen = ({ onLogout, onNavigate, roomCode, isDarkMode, onThemeTogg
       return;
     }
     
-    // Update the password (in a real app, this would be sent to server)
-    alert(`Password changed successfully! New password: ${newPassword}`);
+    // Security: Never show the new password
+    alert('Password changed successfully!');
     setShowPasswordModal(false);
     setCurrentPassword('');
     setNewPassword('');

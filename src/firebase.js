@@ -12,18 +12,13 @@ const firebaseConfig = {
   measurementId: "G-H7356FG4GZ"
 };
 
-console.log('🔥 Firebase Config:', firebaseConfig);
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-console.log('🔥 Firebase App initialized:', app);
 
 // Initialize Firestore with default database
 export const db = getFirestore(app);
-console.log('🔥 Firestore DB initialized:', db);
 
 // Initialize Analytics (only in browser)
 export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
-console.log('🔥 Analytics initialized:', analytics);
 
 export { app };

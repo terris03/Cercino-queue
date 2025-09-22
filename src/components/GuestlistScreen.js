@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, writeBatch } from 'firebase/firestore';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { collection, updateDoc, deleteDoc, doc, onSnapshot, query, where, writeBatch } from 'firebase/firestore';
 import { db } from '../firebase';
-import { loadGuests, addGuest, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
+import { loadGuests, updateGuest, deleteGuest, addGuestsBatch } from '../utils/localStorage';
 
 const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpdate }) => {
+  // Memoize the guests update callback to prevent unnecessary re-renders
+  const memoizedOnGuestsUpdate = useCallback(onGuestsUpdate, [onGuestsUpdate]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('All');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
@@ -17,90 +19,91 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Load guests with Firebase real-time sync and detailed logging
+  // Load guests with Firebase real-time sync (optimized)
   useEffect(() => {
-    console.log('🔄 Loading guests for roomCode:', roomCode);
+    let unsubscribe = null;
     
     // Load from localStorage immediately for instant display
     const localGuests = loadGuests().filter(guest => guest.roomCode === roomCode);
-    console.log('💾 Loaded from localStorage instantly:', localGuests.length, 'guests');
     setGuests(localGuests);
     setLoading(false);
     
-    // Set up Firebase real-time listener with detailed logging
+    // Set up Firebase real-time listener (optimized)
     try {
-      console.log('🔥 Setting up Firebase connection...');
-      console.log('🔥 Database object:', db);
-      
       const guestsRef = collection(db, 'guests');
-      console.log('🔥 Guests collection reference:', guestsRef);
-      
       const q = query(guestsRef, where('roomCode', '==', roomCode));
-      console.log('🔥 Query created:', q);
       
-      console.log('🔥 Setting up onSnapshot listener...');
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        console.log('🔥 Firebase real-time update received!');
-        console.log('🔥 Snapshot metadata:', snapshot.metadata);
-        console.log('🔥 Snapshot size:', snapshot.size);
-        console.log('🔥 Snapshot empty:', snapshot.empty);
-        
+      unsubscribe = onSnapshot(q, (snapshot) => {
         const firebaseGuests = [];
         snapshot.forEach((doc) => {
-          console.log('🔥 Document ID:', doc.id);
-          console.log('🔥 Document data:', doc.data());
           firebaseGuests.push({ id: doc.id, ...doc.data() });
         });
         
-        console.log('🔥 Firebase guests count:', firebaseGuests.length);
-        console.log('🔥 Firebase guests data:', firebaseGuests);
-        
-        // Update state with Firebase data
-        setGuests(firebaseGuests);
-        
-        // Notify parent component of guests update
-        if (onGuestsUpdate) {
-          onGuestsUpdate(firebaseGuests);
-        }
-        
-        // Also update localStorage with Firebase data
-        const allGuests = loadGuests();
-        const otherRoomGuests = allGuests.filter(g => g.roomCode !== roomCode);
-        const updatedGuests = [...otherRoomGuests, ...firebaseGuests];
-        localStorage.setItem('cercino-guests', JSON.stringify(updatedGuests));
-        console.log('💾 Updated localStorage with Firebase data');
+        // Only update state if there are actual differences to avoid unnecessary re-renders
+        setGuests(currentGuests => {
+          // Check if the data is actually different
+          const currentGuestsString = JSON.stringify(currentGuests.sort((a, b) => a.id.localeCompare(b.id)));
+          const firebaseGuestsString = JSON.stringify(firebaseGuests.sort((a, b) => a.id.localeCompare(b.id)));
+          
+          if (currentGuestsString !== firebaseGuestsString) {
+            // Data has changed, update state
+            if (memoizedOnGuestsUpdate) {
+              memoizedOnGuestsUpdate(firebaseGuests);
+            }
+            
+            // Update localStorage only when data actually changes
+            const allGuests = loadGuests();
+            const otherRoomGuests = allGuests.filter(g => g.roomCode !== roomCode);
+            const updatedGuests = [...otherRoomGuests, ...firebaseGuests];
+            localStorage.setItem('cercino-guests', JSON.stringify(updatedGuests));
+            
+            return firebaseGuests;
+          }
+          
+          // No changes, return current state to avoid re-render
+          return currentGuests;
+        });
         
       }, (error) => {
-        console.error('🔥 Firebase onSnapshot ERROR:', error);
-        console.error('🔥 Error code:', error.code);
-        console.error('🔥 Error message:', error.message);
-        console.error('🔥 Error details:', error.details);
+        console.error('Firebase sync error:', error.message);
         // Keep using localStorage data if Firebase fails
       });
 
-      console.log('🔥 Firebase listener set up successfully');
       return () => {
-        console.log('🔥 Unsubscribing from Firebase listener');
-        unsubscribe();
+        if (unsubscribe) {
+          unsubscribe();
+        }
       };
     } catch (error) {
-      console.error('🔥 Firebase setup ERROR:', error);
-      console.error('🔥 Setup error details:', error.message);
+      console.error('Firebase setup error:', error.message);
       // Keep using localStorage data
     }
-  }, [roomCode]);
+  }, [roomCode, memoizedOnGuestsUpdate]);
+
+  // Add click outside listener for dropdowns
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const totalGuests = guests.length;
   const checkedInCount = guests.filter(guest => guest.checkedIn === true).length;
   const remainingGuests = totalGuests - checkedInCount;
-  
-  // Debug logging
-  console.log('📊 Guest stats:', {
-    totalGuests,
-    checkedInCount,
-    remainingGuests,
-    guests: guests.map(g => ({ name: g.name, checkedIn: g.checkedIn }))
-  });
+
+  // Function to calculate number of tickets based on price
+  const calculateTickets = (price) => {
+    if (!price) return 0;
+    
+    // Extract numeric value from price string (e.g., "100 kr" -> 100)
+    const numericPrice = parseFloat(price.replace(/[^\d.]/g, ''));
+    if (isNaN(numericPrice)) return 0;
+    
+    // Assuming each ticket costs 100 kr (you can adjust this)
+    const ticketPrice = 100;
+    return Math.floor(numericPrice / ticketPrice);
+  };
 
   const handleCheckIn = async (guestId) => {
     try {
@@ -110,48 +113,44 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
         return;
       }
       
+      // OPTIMISTIC UPDATE: Update local state immediately for instant feedback
+      const newCheckedInState = !guest.checkedIn;
+      setGuests(prevGuests => 
+        prevGuests.map(g => 
+          g.id === guestId 
+            ? { ...g, checkedIn: newCheckedInState, lastUpdated: new Date() }
+            : g
+        )
+      );
       
-      console.log('🔥 Attempting to update guest check-in in Firebase...');
-      console.log('🔥 Guest ID:', guestId);
-      console.log('🔥 Guest data:', guest);
-      console.log('🔥 New checked-in status:', !guest.checkedIn);
-      
-      // Update in Firebase for real-time sync
+      // Update in Firebase for real-time sync (background operation)
       try {
         const guestRef = doc(db, 'guests', guestId);
-        console.log('🔥 Document reference:', guestRef);
-        
         const updateData = {
-          checkedIn: !guest.checkedIn,
+          checkedIn: newCheckedInState,
           lastUpdated: new Date()
         };
-        console.log('🔥 Update data:', updateData);
         
-        await updateDoc(guestRef, updateData);
-        console.log('✅ Guest check-in updated in Firebase successfully!');
-        console.log('✅ Guest:', guest.name, 'New status:', !guest.checkedIn);
-      } catch (firebaseError) {
-        console.error('🔥 Firebase update FAILED:', firebaseError);
-        console.error('🔥 Firebase error code:', firebaseError.code);
-        console.error('🔥 Firebase error message:', firebaseError.message);
-        console.error('🔥 Firebase error details:', firebaseError.details);
-        console.error('🔥 Full Firebase error object:', firebaseError);
-        
-        // Fallback to localStorage
-        console.log('💾 Falling back to localStorage...');
-        const updatedGuest = updateGuest(guestId, {
-          checkedIn: !guest.checkedIn
+        // Fire and forget - don't wait for Firebase response
+        updateDoc(guestRef, updateData).catch(firebaseError => {
+          console.error('Firebase update failed:', firebaseError.message);
+          // If Firebase fails, the real-time listener will eventually sync
+          // or we can show a subtle error indicator if needed
         });
-        
-        if (updatedGuest) {
-          setGuests(prevGuests => 
-            prevGuests.map(g => g.id === guestId ? updatedGuest : g)
-          );
-          console.log('💾 Guest check-in updated in localStorage:', updatedGuest.name, updatedGuest.checkedIn);
-        }
+      } catch (firebaseError) {
+        console.error('Firebase update failed:', firebaseError.message);
+        // Firebase error doesn't affect the UI - optimistic update already applied
       }
     } catch (error) {
       console.error('Error checking in guest:', error);
+      // Revert optimistic update on error
+      setGuests(prevGuests => 
+        prevGuests.map(g => 
+          g.id === guestId 
+            ? { ...g, checkedIn: !g.checkedIn } // Revert to original state
+            : g
+        )
+      );
       alert('Error updating guest. Please try again.');
     }
   };
@@ -296,7 +295,9 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
 
   const handleClickOutside = (e) => {
     if (e.target.closest('.input-with-suggestions')) return;
+    if (e.target.closest('.filter-container')) return;
     setShowSuggestions(false);
+    setShowFilterDropdown(false);
   };
 
   const parseCSV = (csvText) => {
@@ -554,15 +555,26 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
   };
 
   const filteredGuests = guests.filter(guest => {
-    // SIMPLE AND BULLETPROOF search function
+    // ENHANCED search function with better debugging
     let matchesSearch = true;
     
     if (searchTerm.trim().length > 0) {
       const searchValue = searchTerm.trim().toLowerCase();
       const guestName = (guest.name || '').toLowerCase();
       
-      // ONLY show guests whose name contains the search term
+      // Enhanced search - check if name contains search term
       matchesSearch = guestName.includes(searchValue);
+      
+      // Debug logging for search
+      if (searchValue === 'molly') {
+        console.log('🔍 Search Debug for "molly":', {
+          guestName: guest.name,
+          guestId: guest.id,
+          matchesSearch: matchesSearch,
+          searchValue: searchValue,
+          guestNameLower: guestName
+        });
+      }
     }
     
     // Apply filter
@@ -592,6 +604,16 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
         return 0; // No sorting for other filters
     }
   });
+
+  // Debug logging for search results
+  if (searchTerm.trim().length > 0) {
+    console.log('🔍 Search Results Debug:', {
+      searchTerm: searchTerm,
+      totalGuests: guests.length,
+      filteredGuests: filteredGuests.length,
+      allGuestNames: guests.map(g => g.name)
+    });
+  }
 
   return (
     <div className="guestlist-screen">
@@ -631,12 +653,12 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
             </div>
             <div className="filter-container">
               <button 
-                className="filter-btn"
+                className={`filter-btn ${showFilterDropdown ? 'active' : ''}`}
                 onClick={() => setShowFilterDropdown(!showFilterDropdown)}
               >
                 <i className="fas fa-filter"></i>
                 <span>{filter}</span>
-                <i className="fas fa-chevron-down"></i>
+                <i className={`fas fa-chevron-${showFilterDropdown ? 'up' : 'down'}`}></i>
               </button>
               
               {showFilterDropdown && (
@@ -731,19 +753,19 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
           >
             <div className="guest-info">
               <span className="guest-name">{guest.name}</span>
-              <span className="guest-price">{guest.price || 'No price'}</span>
+              <div className="guest-price-info">
+                <span className="guest-price">{guest.price || 'No price'}</span>
+                {guest.price && calculateTickets(guest.price) > 0 && (
+                  <span className="guest-tickets">
+                    {calculateTickets(guest.price)} ticket{calculateTickets(guest.price) !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
               {guest.tag && (
                 <span className="guest-tag">{guest.tag}</span>
               )}
             </div>
             <div className="guest-actions">
-              <button 
-                className="delete-btn"
-                onClick={() => handleDeleteGuest(guest.id)}
-                title="Delete Guest"
-              >
-                <i className="fas fa-trash"></i>
-              </button>
               <button 
                 className={`checkin-btn ${guest.checkedIn ? 'checked' : ''}`}
                 onClick={() => handleCheckIn(guest.id)}
@@ -759,33 +781,19 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
 
       {/* Fixed Bottom Navigation */}
 
-      {/* Guest Modal */}
+      {/* Guest Slide Menu */}
       {showGuestModal && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} onMouseDown={handleClickOutside}>
-            <div className="modal-header">
+        <div className="menu-overlay" onClick={handleCloseModal}>
+          <div className="slide-menu open" onClick={(e) => e.stopPropagation()}>
+            <div className="menu-header">
               <h3>{editingGuest ? 'Edit Guest' : 'Add New Guest'}</h3>
               <div className="modal-header-actions">
-                {editingGuest && (
-                  <button 
-                    className="delete-guest-btn"
-                    onClick={() => {
-                      if (window.confirm('Are you sure you want to delete this guest?')) {
-                        handleDeleteGuest(editingGuest.id);
-                        handleCloseModal();
-                      }
-                    }}
-                    title="Delete Guest"
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
-                )}
                 <button className="close-btn" onClick={handleCloseModal}>
                   <i className="fas fa-times"></i>
                 </button>
               </div>
             </div>
-            <div className="modal-body">
+            <div className="menu-content">
               <div className="form-group">
                 <label htmlFor="guestSearch">Search Existing Guest</label>
                 <div className="input-with-suggestions">
@@ -823,8 +831,13 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                           return guestName.includes(searchTerm);
                         });
                         
+                        // Remove duplicates based on guest ID
+                        const uniqueSuggestions = suggestions.filter((guest, index, self) => 
+                          index === self.findIndex(g => g.id === guest.id)
+                        );
+                        
                         // Sort suggestions by relevance
-                        const sortedSuggestions = suggestions.sort((a, b) => {
+                        const sortedSuggestions = uniqueSuggestions.sort((a, b) => {
                           const aName = a.name.toLowerCase();
                           const bName = b.name.toLowerCase();
                           const searchTerm = value.toLowerCase();
@@ -908,11 +921,26 @@ const GuestlistScreen = ({ onLogout, onNavigate, roomCode = '1515', onGuestsUpda
                 />
               </div>
             </div>
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={handleCloseModal}>
-                Cancel
+            <div className="menu-footer">
+              <button className="logout-btn" onClick={handleCloseModal}>
+                <i className="fas fa-times"></i>
+                <span>Cancel</span>
               </button>
-              <button className="save-btn" onClick={handleSaveGuest}>
+              {editingGuest && (
+                <button 
+                  className="delete-guest-btn"
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to delete this guest?')) {
+                      handleDeleteGuest(editingGuest.id);
+                      handleCloseModal();
+                    }
+                  }}
+                >
+                  <i className="fas fa-trash"></i>
+                  <span>Delete Guest</span>
+                </button>
+              )}
+              <button className="save-btn" onClick={handleSaveGuest} style={{background: '#ff6b9d', border: 'none', color: '#fff', padding: '12px 20px', borderRadius: '8px', marginLeft: '10px'}}>
                 {editingGuest ? 'Update Guest' : 'Add Guest'}
               </button>
             </div>
